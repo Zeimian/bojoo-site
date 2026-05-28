@@ -1,7 +1,7 @@
 {
-  "name": "bojoo-site",
+  "name": "bojoo-cn",
   "version": "1.0.0",
-  "description": "Bojoo Cheese Enterprise Portal — bojoo.cn official site + bojoo.online internal hub",
+  "description": "宝珠奶酪官方网站 — bojoo.cn",
   "scripts": {
     "dev": "npx @11ty/eleventy --serve",
     "build": "npx @11ty/eleventy",

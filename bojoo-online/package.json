@@ -1,0 +1,12 @@
+{
+  "name": "bojoo-online",
+  "version": "1.0.0",
+  "description": "宝珠奶酪内部工具导航 — bojoo.online",
+  "scripts": {
+    "dev": "npx @11ty/eleventy --serve",
+    "build": "npx @11ty/eleventy"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}
