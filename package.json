@@ -1,0 +1,13 @@
+{
+  "name": "bojoo-site",
+  "version": "1.0.0",
+  "description": "Bojoo Cheese Enterprise Portal — bojoo.cn official site + bojoo.online internal hub",
+  "scripts": {
+    "dev": "npx @11ty/eleventy --serve",
+    "build": "npx @11ty/eleventy",
+    "deploy": "bash scripts/deploy.sh"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}

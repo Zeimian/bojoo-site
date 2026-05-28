@@ -1,0 +1,135 @@
+---
+title: "Bojoo Online — 内部工具导航"
+meta_description: "宝珠奶酪内部工具聚合导航站"
+layout: null
+eleventyExcludeFromCollections: true
+---
+{% include "header.njk" %}
+
+<style>
+  .online-hero {
+    padding: 60px 0 40px;
+    text-align: center;
+    background: linear-gradient(135deg, #2c2c2c 0%, #444 100%);
+    color: #fff;
+  }
+  .online-hero h1 {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+  }
+  .online-hero p {
+    color: #ccc;
+    font-size: 1.05rem;
+  }
+  .hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 40px 0;
+  }
+  .hub-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 32px 24px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .hub-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  }
+  .hub-icon {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+  .hub-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: var(--color-primary-dark);
+  }
+  .hub-card p {
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+  .hub-link {
+    display: inline-block;
+    padding: 8px 24px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: var(--color-primary-dark);
+    color: #fff;
+    transition: background 0.2s;
+  }
+  .hub-link:hover {
+    background: var(--color-primary);
+    color: #fff;
+  }
+  .status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .status-active {
+    background: #e6f4ea;
+    color: #1b7a3d;
+  }
+  .status-coming {
+    background: #fff3e0;
+    color: #e65100;
+  }
+</style>
+
+<section class="online-hero">
+  <div class="container">
+    <h1>Bojoo Online</h1>
+    <p>内部工具聚合导航 — 一站式访问所有 Agent 与业务系统</p>
+  </div>
+</section>
+
+<section class="container">
+  <div class="hub-grid">
+    <!-- Cost -->
+    <div class="hub-card">
+      <div class="hub-icon">💰</div>
+      <h3>成本管控</h3>
+      <span class="status-badge status-active">运行中</span>
+      <p>成本机器人使用指南和数据分析</p>
+      <a href="https://cost.bojoo.online" class="hub-link" target="_blank">进入系统</a>
+    </div>
+    <!-- Review -->
+    <div class="hub-card">
+      <div class="hub-icon">⭐</div>
+      <h3>差评收集</h3>
+      <span class="status-badge status-active">运行中</span>
+      <p>三平台差评自动采集与分析</p>
+      <a href="https://review.bojoo.online" class="hub-link" target="_blank">进入系统</a>
+    </div>
+    <!-- Social -->
+    <div class="hub-card">
+      <div class="hub-icon">📕</div>
+      <h3>小红书运营</h3>
+      <span class="status-badge status-coming">开发中</span>
+      <p>小红书关键词监控与博主管理</p>
+      <span class="hub-link" style="background:#ccc;pointer-events:none">即将上线</span>
+    </div>
+    <!-- BI -->
+    <div class="hub-card">
+      <div class="hub-icon">📊</div>
+      <h3>财务 BI</h3>
+      <span class="status-badge status-coming">开发中</span>
+      <p>门店经营数据看板与 AI 分析</p>
+      <span class="hub-link" style="background:#ccc;pointer-events:none">即将上线</span>
+    </div>
+  </div>
+</section>
+
+{% include "footer.njk" %}

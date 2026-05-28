@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title | default: "宝珠奶酪" }}</title>
+  <link rel="stylesheet" href="/css/style.css">
+  {% if meta_description %}
+  <meta name="description" content="{{ meta_description }}">
+  {% endif %}
+  {% if og_image %}
+  <meta property="og:image" content="{{ og_image }}">
+  {% endif %}
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container">
+      <a href="/" class="logo">宝珠奶酪</a>
+      <ul class="nav-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/about.html">关于我们</a></li>
+        <li><a href="/franchise.html">招商加盟</a></li>
+        <li><a href="/products.html">产品介绍</a></li>
+        <li><a href="/contact.html">联系我们</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+  <main>
