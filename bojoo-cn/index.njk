@@ -4,131 +4,677 @@ meta_description: "宝珠奶酪（BOJOO），中国奶酪茶饮开创者。始�
 layout: null
 eleventyExcludeFromCollections: true
 ---
-{% include "header.njk" %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title | default("宝珠奶酪") }}</title>
+  <meta name="description" content="{{ meta_description }}">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ===== Single Page Hero Styles ===== */
+    .sp-hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      overflow: hidden;
+    }
+    .sp-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(184,134,78,0.4) 100%);
+      z-index: 1;
+    }
+    .sp-hero-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      transform: scale(1.05);
+      animation: heroZoom 20s ease-in-out infinite alternate;
+    }
+    @keyframes heroZoom {
+      0% { transform: scale(1.05); }
+      100% { transform: scale(1.15); }
+    }
+    .sp-hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      padding: 0 20px;
+    }
+    .sp-hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+      animation: fadeUp 1s ease-out;
+    }
+    .sp-hero-content p {
+      font-size: 1.3rem;
+      margin-bottom: 32px;
+      opacity: 0.95;
+      animation: fadeUp 1s ease-out 0.3s both;
+    }
+    .sp-hero-content .btn-group {
+      animation: fadeUp 1s ease-out 0.6s both;
+    }
+    .sp-hero-content .btn-primary {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      border: 2px solid #fff;
+      color: #fff;
+      font-size: 1.1rem;
+      padding: 14px 40px;
+    }
+    .sp-hero-content .btn-primary:hover {
+      background: #fff;
+      color: var(--color-primary-dark);
+    }
+    .sp-hero-content .btn-outline {
+      border: 2px solid rgba(255,255,255,0.6);
+      color: #fff;
+      font-size: 1.1rem;
+      padding: 14px 40px;
+    }
+    .sp-hero-content .btn-outline:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: #fff;
+      color: #fff;
+    }
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      animation: bounce 2s infinite;
+    }
+    .scroll-indicator span {
+      display: block;
+      width: 24px;
+      height: 24px;
+      border-right: 2px solid rgba(255,255,255,0.7);
+      border-bottom: 2px solid rgba(255,255,255,0.7);
+      transform: rotate(45deg);
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(10px); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-<!-- Hero -->
-<section class="hero">
-  <div class="container">
-    <h1>天然酿造更健康</h1>
-    <p>宝珠奶酪 — 中国奶酪茶饮开创者，让古代格格的下午茶变成摩登女孩的健康新选择</p>
-    <div class="btn-group">
-      <a href="/about.html" class="btn btn-primary">了解品牌</a>
-      <a href="/franchise.html" class="btn btn-outline">立即加盟</a>
+    /* ===== Parallax Section ===== */
+    .sp-parallax {
+      position: relative;
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      overflow: hidden;
+    }
+    .sp-parallax::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(44,44,44,0.6);
+      z-index: 1;
+    }
+    .sp-parallax-bg {
+      position: absolute;
+      inset: -20% 0;
+      background-size: cover;
+      background-position: center;
+    }
+    .sp-parallax-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      padding: 0 20px;
+    }
+
+    /* ===== Data Counter ===== */
+    .sp-counter {
+      background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+      color: #fff;
+      padding: 80px 0;
+    }
+    .sp-counter h2 {
+      color: #fff;
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 48px;
+    }
+    .counter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .counter-item {
+      padding: 24px;
+    }
+    .counter-number {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .counter-label {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    /* ===== Product Gallery ===== */
+    .sp-products {
+      padding: 100px 0;
+    }
+    .sp-products h2 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+      color: var(--color-primary-dark);
+    }
+    .sp-products .subtitle {
+      text-align: center;
+      color: var(--color-text-light);
+      margin-bottom: 48px;
+      font-size: 1.1rem;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 32px;
+    }
+    .product-card {
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+    .product-card-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+    .product-card-body {
+      padding: 24px;
+      text-align: center;
+    }
+    .product-card-body h3 {
+      font-size: 1.3rem;
+      color: var(--color-primary-dark);
+      margin-bottom: 8px;
+    }
+    .product-card-body .tag {
+      display: inline-block;
+      background: var(--color-bg-light);
+      color: var(--color-primary-dark);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .product-card-body p {
+      color: var(--color-text-light);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ===== Story Section ===== */
+    .sp-story {
+      position: relative;
+      overflow: hidden;
+    }
+    .sp-story-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+    }
+    .sp-story::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(250,247,242,0.92);
+      z-index: 1;
+    }
+    .sp-story-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 100px 20px;
+    }
+    .sp-story-text h2 {
+      font-size: 2.2rem;
+      color: var(--color-primary-dark);
+      margin-bottom: 24px;
+    }
+    .sp-story-text p {
+      color: var(--color-text-light);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+    .sp-story-text .btn-primary {
+      margin-top: 16px;
+    }
+    .sp-story-img {
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    /* ===== Store Showcase ===== */
+    .sp-stores {
+      padding: 100px 0;
+      background: var(--color-bg-light);
+    }
+    .sp-stores h2 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+      color: var(--color-primary-dark);
+    }
+    .sp-stores .subtitle {
+      text-align: center;
+      color: var(--color-text-light);
+      margin-bottom: 48px;
+      font-size: 1.1rem;
+    }
+    .store-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .store-card {
+      border-radius: 12px;
+      overflow: hidden;
+      height: 280px;
+      position: relative;
+    }
+    .store-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .store-card:hover img {
+      transform: scale(1.1);
+    }
+    .store-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%);
+    }
+    .store-card-label {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      z-index: 2;
+      color: #fff;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    /* ===== Franchise CTA ===== */
+    .sp-franchise {
+      position: relative;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      overflow: hidden;
+    }
+    .sp-franchise::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(184,134,78,0.85) 0%, rgba(44,44,44,0.85) 100%);
+      z-index: 1;
+    }
+    .sp-franchise-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+    }
+    .sp-franchise-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      padding: 0 20px;
+    }
+    .sp-franchise-content h2 {
+      color: #fff;
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+    }
+    .sp-franchise-content .tagline {
+      font-size: 1.3rem;
+      margin-bottom: 24px;
+      opacity: 0.95;
+    }
+    .sp-franchise-content .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .sp-franchise-content .info-item {
+      padding: 16px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      backdrop-filter: blur(5px);
+    }
+    .sp-franchise-content .info-item h4 {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-bottom: 4px;
+      font-weight: 400;
+    }
+    .sp-franchise-content .info-item span {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+    .sp-franchise-content .btn-primary {
+      background: #fff;
+      color: var(--color-primary-dark);
+      font-size: 1.1rem;
+      padding: 14px 40px;
+    }
+    .sp-franchise-content .btn-primary:hover {
+      background: rgba(255,255,255,0.9);
+      transform: translateY(-2px);
+    }
+
+    /* ===== Mini Program ===== */
+    .sp-miniprogram {
+      padding: 80px 0;
+      text-align: center;
+      background: var(--color-bg-light);
+    }
+    .sp-miniprogram h2 {
+      font-size: 2rem;
+      color: var(--color-primary-dark);
+      margin-bottom: 16px;
+    }
+    .sp-miniprogram p {
+      color: var(--color-text-light);
+      margin-bottom: 24px;
+    }
+
+    /* ===== Scroll Animations ===== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .sp-hero-content h1 {
+        font-size: 2.2rem;
+      }
+      .sp-hero-content p {
+        font-size: 1rem;
+      }
+      .counter-number {
+        font-size: 2.5rem;
+      }
+      .sp-story-content {
+        grid-template-columns: 1fr;
+        padding: 60px 20px;
+      }
+      .sp-story-img {
+        order: -1;
+        max-height: 250px;
+        object-fit: cover;
+      }
+      .sp-franchise-content .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .sp-franchise-content h2 {
+        font-size: 1.8rem;
+      }
+      .btn-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero -->
+  <section class="sp-hero">
+    <div class="sp-hero-bg" style="background-image: url('/assets/images/hero-1.jpg')"></div>
+    <div class="sp-hero-content">
+      <h1>天然酿造更健康</h1>
+      <p>宝珠奶酪 — 中国奶酪茶饮开创者<br>让古代格格的下午茶变成摩登女孩的健康新选择</p>
+      <div class="btn-group">
+        <a href="#story" class="btn btn-primary">了解品牌</a>
+        <a href="#franchise" class="btn btn-outline">立即加盟</a>
+      </div>
     </div>
-  </div>
-</section>
+    <div class="scroll-indicator"><span></span></div>
+  </section>
 
-<!-- Brand Highlights -->
-<section class="section">
-  <div class="container">
-    <h2>品牌亮点</h2>
-    <div class="card-grid">
-      <div class="card">
-        <h3>始于 2010</h3>
-        <p>第一家店诞生于上海田子坊，16年品牌历史，累计服务 500万+ 顾客</p>
-      </div>
-      <div class="card">
-        <h3>40 天酿造</h3>
-        <p>中式奶酪用 40 天酿造的原浆与牛奶自然凝结，拒绝氢化奶油、植脂末</p>
-      </div>
-      <div class="card">
-        <h3>全国 94+ 门店</h3>
-        <p>历史累计 253 家门店，覆盖全国核心商圈</p>
-      </div>
-      <div class="card">
-        <h3>本真味道</h3>
-        <p>本真味道 · 大地食材 · 天然酿造 — 健康、中国、质朴温暖</p>
+  <!-- Brand Highlights -->
+  <section class="section">
+    <div class="container">
+      <h2 style="text-align:center;margin-bottom:40px;color:var(--color-primary-dark);font-size:2rem">品牌亮点</h2>
+      <div class="card-grid fade-in">
+        <div class="card">
+          <h3>始于 2010</h3>
+          <p>第一家店诞生于上海田子坊，16 年品牌历史，累计服务 500万+ 顾客</p>
+        </div>
+        <div class="card">
+          <h3>40 天酿造</h3>
+          <p>中式奶酪用 40 天酿造的原浆与牛奶自然凝结，拒绝氢化奶油、植脂末</p>
+        </div>
+        <div class="card">
+          <h3>全国 94+ 门店</h3>
+          <p>历史累计 253 家门店，覆盖全国核心商圈</p>
+        </div>
+        <div class="card">
+          <h3>本真味道</h3>
+          <p>本真味道 · 大地食材 · 天然酿造 — 健康、中国、质朴温暖</p>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Data Counter -->
-<section class="section section-light" style="text-align:center">
-  <div class="container">
-    <h2>数字看宝珠</h2>
-    <div class="card-grid" style="max-width:800px;margin:0 auto">
-      <div class="card">
-        <h3 style="font-size:2.5rem;color:var(--color-primary-dark);margin:12px 0 4px">2010</h3>
-        <p>品牌创始年份</p>
-      </div>
-      <div class="card">
-        <h3 style="font-size:2.5rem;color:var(--color-primary-dark);margin:12px 0 4px">500万+</h3>
-        <p>累计服务顾客</p>
-      </div>
-      <div class="card">
-        <h3 style="font-size:2.5rem;color:var(--color-primary-dark);margin:12px 0 4px">94</h3>
-        <p>全国活跃门店</p>
-      </div>
-      <div class="card">
-        <h3 style="font-size:2.5rem;color:var(--color-primary-dark);margin:12px 0 4px">1.94亿</h3>
-        <p>2024 年 GMV 峰值</p>
+  <!-- Data Counter -->
+  <section class="sp-counter">
+    <div class="container">
+      <h2>数字看宝珠</h2>
+      <div class="counter-grid fade-in">
+        <div class="counter-item">
+          <span class="counter-number">2010</span>
+          <span class="counter-label">品牌创始年份</span>
+        </div>
+        <div class="counter-item">
+          <span class="counter-number">500万+</span>
+          <span class="counter-label">累计服务顾客</span>
+        </div>
+        <div class="counter-item">
+          <span class="counter-number">94</span>
+          <span class="counter-label">全国活跃门店</span>
+        </div>
+        <div class="counter-item">
+          <span class="counter-number">1.94亿</span>
+          <span class="counter-label">2024 GMV 峰值</span>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Product Showcase -->
-<section class="section">
-  <div class="container">
-    <h2>核心产品</h2>
-    <div class="card-grid">
-      <div class="card">
-        <h3>中国酪饮（招牌）</h3>
-        <p>代表产品：酒酿桂花酪<br>40 天酿造原浆 + 牛奶自然凝结</p>
-      </div>
-      <div class="card">
-        <h3>手作酸奶</h3>
-        <p>代表产品：雪域高原手作酸奶<br>两步发酵，过滤乳清</p>
-      </div>
-      <div class="card">
-        <h3>酸奶昔</h3>
-        <p>新鲜蔬果 + 手作酸奶<br>四季新鲜蔬果，富含蛋白质与膳食纤维</p>
-      </div>
-      <div class="card">
-        <h3>轻食</h3>
-        <p>代表产品：酸奶菜菜<br>10 年经典产品，手工坚果 + 新鲜水果</p>
+  <!-- Products -->
+  <section class="sp-products">
+    <div class="container">
+      <h2>核心产品</h2>
+      <p class="subtitle">本真味道 · 大地食材 · 天然酿造</p>
+      <div class="product-grid fade-in">
+        <div class="product-card">
+          <img src="/assets/images/products/1649410272.jpg" alt="酒酿桂花酪" class="product-card-img">
+          <div class="product-card-body">
+            <span class="tag">招牌</span>
+            <h3>中国酪饮</h3>
+            <p>代表：酒酿桂花酪<br>40 天酿造原浆 + 牛奶自然凝结</p>
+          </div>
+        </div>
+        <div class="product-card">
+          <img src="/assets/images/products/1649410266.jpg" alt="雪域高原手作酸奶" class="product-card-img">
+          <div class="product-card-body">
+            <span class="tag">人气</span>
+            <h3>手作酸奶</h3>
+            <p>代表：雪域高原手作酸奶<br>两步发酵，过滤乳清</p>
+          </div>
+        </div>
+        <div class="product-card">
+          <img src="/assets/images/products/1649410248.jpg" alt="酸奶昔" class="product-card-img">
+          <div class="product-card-body">
+            <span class="tag">健康</span>
+            <h3>酸奶昔</h3>
+            <p>新鲜蔬果 + 手作酸奶<br>富含蛋白质与膳食纤维</p>
+          </div>
+        </div>
+        <div class="product-card">
+          <img src="/assets/images/products/1649407522.jpg" alt="酸奶菜菜" class="product-card-img">
+          <div class="product-card-body">
+            <span class="tag">经典</span>
+            <h3>轻食</h3>
+            <p>代表：酸奶菜菜<br>10 年经典产品</p>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Brand Story CTA -->
-<section class="section section-light">
-  <div class="container" style="max-width:700px;text-align:center">
-    <h2>宝珠的故事</h2>
-    <p style="color:var(--color-text-light);margin-bottom:24px;line-height:1.8">
-      2010 年夏天，宝珠和周先生在北京胡同里第一次喝到中国奶酪，被深深惊艳。两人白天在写字楼里工作，晚上到小店里酿造第二天的饮品。十三年来，宝珠沿着原创之路踽踽独行，将酿造技艺与现代茶饮结合，让古代格格们的下午茶变成摩登女孩的健康饮品新选择。
-    </p>
-    <a href="/about.html" class="btn btn-primary">了解更多</a>
-  </div>
-</section>
+  <!-- Brand Story -->
+  <section class="sp-story" id="story">
+    <div class="sp-story-bg" style="background-image: url('/assets/images/hero-2.jpg')"></div>
+    <div class="sp-story-content">
+      <div class="sp-story-text fade-in">
+        <h2>宝珠的故事</h2>
+        <p>2010 年夏天，宝珠和周先生在北京胡同里第一次喝到中国奶酪，被深深惊艳。两人白天在写字楼里工作，晚上到小店里酿造第二天的饮品。</p>
+        <p>快乐就是酿出本真的味道，做一件温暖美好的事。</p>
+        <p>十三年来，宝珠沿着原创之路踽踽独行，将酿造技艺与现代茶饮结合，让古代格格们的下午茶变成摩登女孩的健康饮品新选择。</p>
+        <a href="/about.html" class="btn btn-primary">了解更多</a>
+      </div>
+      <img src="/assets/images/about-1.jpg" alt="宝珠奶酪" class="sp-story-img fade-in">
+    </div>
+  </section>
 
-<!-- Franchise CTA -->
-<section class="section">
-  <div class="container" style="text-align:center">
-    <h2>加盟宝珠奶酪</h2>
-    <p style="color:var(--color-text-light);max-width:500px;margin:0 auto 24px">
-      单店投资 40-60 万元，全流程扶持，从选址到开业，一站式加盟服务
-    </p>
-    <a href="/franchise.html" class="btn btn-primary">了解加盟政策</a>
-  </div>
-</section>
+  <!-- Store Showcase -->
+  <section class="sp-stores">
+    <div class="container">
+      <h2>门店空间</h2>
+      <p class="subtitle">探索现代的轻松的新中式小歇空间</p>
+      <div class="store-grid fade-in">
+        <div class="store-card">
+          <img src="/assets/images/store-1.jpg" alt="门店">
+          <span class="store-card-label">门店环境</span>
+        </div>
+        <div class="store-card">
+          <img src="/assets/images/store-2.jpg" alt="门店">
+          <span class="store-card-label">产品制作</span>
+        </div>
+        <div class="store-card">
+          <img src="/assets/images/store-3.jpg" alt="门店">
+          <span class="store-card-label">品牌联名</span>
+        </div>
+        <div class="store-card">
+          <img src="/assets/images/store-4.jpg" alt="门店">
+          <span class="store-card-label">大地食材</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- Mini Program Entry -->
-<section class="section section-light">
-  <div class="container" style="text-align:center">
-    <h2>进入小程序</h2>
-    <p style="color:var(--color-text-light);margin-bottom:20px">
-      手机扫码或点击下方链接，直接进入宝珠奶酪微信小程序
-    </p>
-    <a href="weixin://dl/business/?t=XXXXXXX" class="btn btn-primary">
-      打开小程序
-    </a>
-    <p style="font-size:0.85rem;color:#999;margin-top:12px">
-      （小程序 URL Scheme 占位，待从小程序后台生成）
-    </p>
-  </div>
-</section>
+  <!-- Franchise CTA -->
+  <section class="sp-franchise" id="franchise">
+    <div class="sp-franchise-bg" style="background-image: url('/assets/images/hero-3.jpg')"></div>
+    <div class="sp-franchise-content fade-in">
+      <h2>加盟宝珠奶酪</h2>
+      <p class="tagline">全新联营模式，0 加盟费，大幅降低开店门槛</p>
+      <div class="info-grid">
+        <div class="info-item">
+          <h4>单店投资</h4>
+          <span>40-50 万</span>
+        </div>
+        <div class="info-item">
+          <h4>加盟费</h4>
+          <span>0 元</span>
+        </div>
+        <div class="info-item">
+          <h4>保证金</h4>
+          <span>3 万</span>
+        </div>
+      </div>
+      <a href="/franchise.html" class="btn btn-primary">了解加盟政策</a>
+    </div>
+  </section>
 
-{% include "footer.njk" %}
+  <!-- Mini Program -->
+  <section class="sp-miniprogram">
+    <div class="container">
+      <h2>进入小程序</h2>
+      <p>手机扫码或点击下方链接，直接进入宝珠奶酪微信小程序</p>
+      <a href="weixin://dl/business/?t=XXXXXXX" class="btn btn-primary">打开小程序</a>
+      <p style="font-size:0.85rem;color:#999;margin-top:12px">（小程序 URL Scheme 占位，待从小程序后台生成）</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  {% include "footer.njk" %}
+
+  <script src="/scripts/main.js"></script>
+  <script>
+    // Scroll-triggered fade-in animations
+    document.addEventListener("DOMContentLoaded", function () {
+      var elements = document.querySelectorAll(".fade-in");
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      elements.forEach(function (el) { observer.observe(el); });
+    });
+  </script>
+</body>
+</html>
