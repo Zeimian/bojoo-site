@@ -1,0 +1,94 @@
+---
+title: "差评系统使用文档 — Bojoo Online"
+layout: null
+eleventyExcludeFromCollections: true
+---
+{% include "header.njk" %}
+
+<style>
+  .doc-page { padding: 40px 0 60px; }
+  .doc-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .doc-header h1 {
+    font-size: 1.8rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 8px;
+  }
+  .doc-header p {
+    color: var(--color-text-light);
+  }
+  .doc-frame {
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .doc-frame h3 {
+    font-size: 1rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 12px;
+  }
+  .doc-frame p {
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+  .doc-link {
+    display: inline-block;
+    padding: 10px 24px;
+    border-radius: 6px;
+    background: var(--color-primary-dark);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  .doc-link:hover {
+    background: var(--color-primary);
+    color: #fff;
+  }
+  .doc-note {
+    background: #fff3e0;
+    border: 1px solid #ffcc80;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 0.85rem;
+    color: #e65100;
+  }
+</style>
+
+<section class="doc-page">
+  <div class="container">
+    <div class="doc-header">
+      <h1>⭐ 差评收集服务使用手册</h1>
+      <p>三平台差评自动采集、分析与推送的完整操作指南</p>
+    </div>
+
+    <div class="doc-frame">
+      <h3>📄 HTML 版使用手册</h3>
+      <p>
+        面向店长、运营、管理层的完整使用手册，无需技术背景即可理解。
+        包含系统介绍、使用方法、数据看板说明和常见问题解答。
+      </p>
+      <br>
+      <a href="/docs/宝珠奶酪差评服务使用手册.html" class="doc-link" target="_blank">查看完整手册 →</a>
+    </div>
+
+    <div class="doc-frame">
+      <h3>🎯 系统概览</h3>
+      <p>
+        差评收集服务每日自动从大众点评、美团外卖、饿了么三个平台采集差评数据，
+        经过筛选、清洗后通过企微群推送。支持周报、日报、互动查询。
+      </p>
+    </div>
+
+    <div class="doc-note">
+      💡 <strong>提示：</strong>如需更新此文档内容，请在本地编辑 Markdown 源文件后推送。
+    </div>
+  </div>
+</section>
+
+{% include "footer.njk" %}

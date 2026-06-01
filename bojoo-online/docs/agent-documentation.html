@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw 多 Agent 系统 — 工作文档与使用指南</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --fg: #c9d1d9;
+    --heading: #58a6ff;
+    --accent: #3fb950;
+    --warn: #f0883e;
+    --error: #f85149;
+    --border: #30363d;
+    --card: #161b22;
+    --table-stripe: #1c2129;
+    --code-bg: #1a1f27;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.7;
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 2rem; color: var(--heading); margin: 2.5rem 0 1rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; }
+  h2 { font-size: 1.5rem; color: var(--heading); margin: 2rem 0 0.8rem; }
+  h3 { font-size: 1.2rem; color: var(--accent); margin: 1.5rem 0 0.5rem; }
+  h4 { font-size: 1.05rem; color: var(--warn); margin: 1rem 0 0.5rem; }
+  p, li { margin-bottom: 0.5rem; }
+  a { color: var(--heading); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.92rem; }
+  th { background: var(--card); color: var(--heading); padding: 0.6rem 0.8rem; text-align: left; border: 1px solid var(--border); }
+  td { padding: 0.5rem 0.8rem; border: 1px solid var(--border); }
+  tr:nth-child(even) { background: var(--table-stripe); }
+  .tag { display: inline-block; padding: 0.15em 0.6em; border-radius: 12px; font-size: 0.82em; font-weight: 600; margin-right: 0.3em; }
+  .tag-ok { background: #1a3a2a; color: var(--accent); border: 1px solid var(--accent); }
+  .tag-warn { background: #3a2a1a; color: var(--warn); border: 1px solid var(--warn); }
+  .tag-err { background: #3a1a1a; color: var(--error); border: 1px solid var(--error); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; margin: 1rem 0; }
+  code { background: var(--code-bg); padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.9em; color: #e6edf3; }
+  pre { background: var(--code-bg); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+  pre code { background: none; padding: 0; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; margin: 1.5rem 0; }
+  .toc ul { list-style: none; padding-left: 1rem; }
+  .toc > li { margin: 0.3rem 0; }
+  .toc li::before { content: "→ "; color: var(--accent); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+  .note { border-left: 3px solid var(--warn); padding: 0.8rem 1rem; margin: 1rem 0; background: #2a2210; border-radius: 0 8px 8px 0; }
+  .info { border-left: 3px solid var(--heading); padding: 0.8rem 1rem; margin: 1rem 0; background: #0d1a2a; border-radius: 0 8px 8px 0; }
+</style>
+</head>
+<body>
+
+<h1>🚀 OpenClaw 多 Agent 系统 — 工作文档与使用指南</h1>
+<p style="color:#8b949e;font-size:0.9rem;">文档生成日期：2026-04-28 ｜ 版本：v1.0</p>
+
+<div class="toc">
+<h3 style="color:var(--heading);margin-top:0;">目录</h3>
+<ul>
+  <li><a href="#overview">一、整体架构概览</a></li>
+  <li><a href="#changes">二、今日工作调整总结</a></li>
+  <li><a href="#agent-table">三、Agent 配置一览表</a></li>
+  <li><a href="#cost-agent">四、成本管控 Agent 深度说明</a></li>
+  <li><a href="#recipe-parser">五、配方解析引擎（核心）</a></li>
+  <li><a href="#matching">六、数据库匹配与别名系统</a></li>
+  <li><a href="#limitations">七、当前局限与已知问题</a></li>
+  <li><a href="#ops">八、运维管理命令</a></li>
+  <li><a href="#usage">九、使用方法</a></li>
+</ul>
+</div>
+
+<!-- ======================== SECTION 1 ======================== -->
+<h2 id="overview">一、整体架构概览</h2>
+
+<p>系统基于 OpenClaw 框架，采用 <strong>一主多子</strong> 的 Agent 架构。每个 Agent 拥有独立的网关端口、配置文件、WeCom Bot、模型池，通过主 Agent 进行统一调度。</p>
+
+<div class="card">
+  <strong>架构特点：</strong>
+  <ul>
+    <li><strong>隔离运行</strong>：每个 Agent 独立进程、独立端口、独立配置</li>
+    <li><strong>统一 WeCom</strong>：每个 Agent 绑定独立的企微 Bot，通过 @ 触发</li>
+    <li><strong>统一模型池</strong>：所有 Agent 共享同一套模型（bailian-coding 9 模型 + deepseek 2 模型）</li>
+    <li><strong>V6 本地计算</strong>：成本 Agent 通过内置 Python 服务（端口 18900）实现毫秒级本地计算，不依赖大模型</li>
+  </ul>
+</div>
+
+<!-- ======================== SECTION 2 ======================== -->
+<h2 id="changes">二、今日工作调整总结</h2>
+
+<h3>1. 响应速度优化</h3>
+<p>将所有 Agent 的默认模型从 <code>deepseek-v4-pro</code> 切换为 <code>qwen3.6-plus</code>（阿里云百炼），响应延迟降低约 60%。同时配置了 11 个可选模型供按需切换。</p>
+
+<h3>2. Agent 能力分离</h3>
+<p>从单一全能 Agent 拆分为 <strong>1 主 + 3 子</strong> 的专业 Agent 架构：</p>
+<table>
+  <tr><th>Agent</th><th>端口</th><th>职责</th></tr>
+  <tr><td>主 Agent（管理调度）</td><td>15447</td><td>接收指令、分发任务、监控状态，不做具体业务处理</td></tr>
+  <tr><td>成本管控</td><td>15448</td><td>成本核算、配方分析、BOM 计算、原材料价格查询</td></tr>
+  <tr><td>差评收集</td><td>15449</td><td>差评监控、舆情汇总、售后投诉处理</td></tr>
+  <tr><td>小红书运营</td><td>15451</td><td>社交媒体内容运营、跟帖回复</td></tr>
+</table>
+
+<h3>3. 成本 Agent 权限限制</h3>
+<p>对成本管控 Agent 的工具权限进行了严格限制：</p>
+<ul>
+  <li><span class="tag tag-ok">允许</span> read、write、edit、apply_patch、glob、grep（仅限工作区内）</li>
+  <li><span class="tag tag-err">禁止</span> exec、process、bash、agent（禁止执行 shell、进程操作）</li>
+  <li><span class="tag tag-ok">允许</span> 浏览器（搜索 1688 批发价格）</li>
+  <li>文件系统限制：<code>workspaceOnly: true</code></li>
+</ul>
+
+<h3>4. 配方解析引擎重建</h3>
+<p>从零重建了统一的配方解析引擎（Python），支持 <strong>23 种表达方式</strong>，其中 <strong>18 种常用格式</strong> 经过完整测试验证：</p>
+<ul>
+  <li><strong>自然语言类（8 种）</strong>：品名+数量、数量+品名、分隔符（+/,/，/；）、口语化/步骤描述、购物清单（带序号/bullet）、纯名称罗列等</li>
+  <li><strong>数字变体类（6 种）</strong>：阿拉伯数字（40g）、中文数字（二十克）、中文数字+品名（奶酪一份）、分数（½克）、空格分隔（桂花 3g）、数字前置（40g 桂花）</li>
+  <li><strong>干扰/排版类（6 种）</strong>：品牌前缀（青岚抹茶粉）、品牌后缀、括号备注（桂花原浆（酒酿））、emoji 混入、口语后缀（120g左右/200g打底）、无关信息夹杂</li>
+  <li><strong>SOP 表格类（3 种）</strong>：标准表格（制表符分隔）、空格分隔表格、Markdown 表格</li>
+</ul>
+
+<h3>5. 本地快速计算服务（V6）</h3>
+<p>使用 Python HTTP 服务（端口 18900）实现配方解析 + 成本计算全链路本地化，不经过大模型，响应时间 <strong>&lt; 50ms</strong>。支持：</p>
+<ul>
+  <li>CSV 数据全量加载（原材料价格表、门店自制 BOM、产品配方 BOM）</li>
+  <li>三层规则匹配引擎（精确 → 品牌 → 核心关键词）</li>
+  <li>BOM 频率排序自动选择最佳匹配</li>
+  <li>价格冲突检测（差价 &gt; 30% 时提示确认）</li>
+</ul>
+
+<h3>6. 数据库匹配探索</h3>
+<p>对未在数据库中找到的食材：</p>
+<ul>
+  <li><strong>数据库相似匹配</strong>：基于字符重叠度 + 连续子串匹配，返回 Top 5 相似品作为价格参考 <span class="tag tag-ok">成功</span></li>
+  <li><strong>SeARXNG 搜索</strong>：部署了 SeARXNG（端口 33811），但对中文商业内容搜索效果差（返回游戏、文学等无关结果）<span class="tag tag-warn">不理想</span></li>
+  <li><strong>1688 直接搜索</strong>：1688.com 有 WAF 防爬，直接抓取不可行 <span class="tag tag-err">失败</span></li>
+  <li><strong>最终方案</strong>：使用数据库相似匹配 + 提示用户在 1688 手动搜索</li>
+</ul>
+
+<h3>7. systemd 服务化</h3>
+<p>为所有 4 个 Agent 创建了 systemd 服务单元文件，支持 <code>systemctl start/stop/restart/status</code> 管理。同时编写了批量管理脚本 <code>/workspace/manage-agents.sh</code>。</p>
+
+<!-- ======================== SECTION 3 ======================== -->
+<h2 id="agent-table">三、Agent 配置一览表</h2>
+
+<table>
+  <tr><th>配置项</th><th>主 Agent</th><th>成本管控</th><th>差评收集</th><th>小红书运营</th></tr>
+  <tr><td>服务名</td><td><code>openclaw-main</code></td><td><code>openclaw-cost</code></td><td><code>openclaw-review</code></td><td><code>openclaw-social</code></td></tr>
+  <tr><td>端口</td><td>15447</td><td>15448</td><td>15449</td><td>15451</td></tr>
+  <tr><td>默认模型</td><td>qwen3.6-plus</td><td>qwen3.6-plus</td><td>qwen3.6-plus</td><td>qwen3.6-plus</td></tr>
+  <tr><td>WeCom</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+  <tr><td>配置路径</td><td><code>home/.openclaw/</code></td><td><code>home-cost/.openclaw/</code></td><td><code>home-review/.openclaw/</code></td><td><code>home-social/.openclaw/</code></td></tr>
+  <tr><td>SOUL.md</td><td>管理角色</td><td>成本专家</td><td>差评监控</td><td>社交运营</td></tr>
+  <tr><td>浏览器</td><td>关闭</td><td>启用</td><td>关闭</td><td>关闭</td></tr>
+</table>
+
+<!-- ======================== SECTION 4 ======================== -->
+<h2 id="cost-agent">四、成本管控 Agent 深度说明</h2>
+
+<h3>4.1 数据流</h3>
+<div class="card">
+<pre style="margin:0;">
+用户 WeCom 消息
+  → OpenClaw Gateway (15448)
+    → SOUL.md 判断为成本相关
+      → curl 调用 V6 本地服务 (18900)
+        → parse_recipe() 解析配方
+        → calculate_local() 计算成本
+        → 返回格式化 Markdown 表格
+      → Agent 返回 msg 字段给用户
+</pre>
+</div>
+
+<h3>4.2 数据来源</h3>
+<table>
+  <tr><th>CSV 文件</th><th>用途</th><th>加载位置</th></tr>
+  <tr><td><code>01_原材料价格表.csv</code></td><td>原材料品名、分类、每克成本、规格</td><td><code>/vol1/ai-server/csv/</code></td></tr>
+  <tr><td><code>02_产品配方BOM_在售.csv</code></td><td>BOM 使用频率统计、单位计价</td><td><code>/vol1/ai-server/csv/</code></td></tr>
+  <tr><td><code>03_门店自制半成品BOM.csv</code></td><td>门店自制半成品每克成本</td><td><code>/vol1/ai-server/csv/</code></td></tr>
+</table>
+
+<h3>4.3 别名系统</h3>
+<p>配方中的名称会自动映射到数据库中的标准品名：</p>
+<table>
+  <tr><th>配方中名称</th><th>映射目标</th></tr>
+  <tr><td>酸奶</td><td>散装甜浆</td></tr>
+  <tr><td>酸奶机</td><td>散装甜浆</td></tr>
+  <tr><td>进口蓝莓</td><td>蓝莓</td></tr>
+  <tr><td>燕麦奶 / OATLY</td><td>Amazing燕麦饮</td></tr>
+  <tr><td>紫薯芋泥爆珠</td><td>芋泥</td></tr>
+  <tr><td>桂花</td><td>桂花原浆（酒酿）</td></tr>
+</table>
+
+<h3>4.4 特殊规则</h3>
+<ul>
+  <li><strong>冰块免费</strong>：包含"冰"字的食材自动标记为 0 元</li>
+  <li><strong>散装甜浆排序</strong>：酸奶机版本优先于外采版本</li>
+  <li><strong>价格冲突检测</strong>：同一食材多个选项差价 &gt; 30% 时，弹出确认表</li>
+  <li><strong>包装固定成本</strong>：杯子 0.45 + 杯盖 0.1705 + 吸管 0.132 = 0.7525 元/份</li>
+  <li><strong>非成本问题拦截</strong>：非成本类问题返回固定话术引导到主 Agent</li>
+</ul>
+
+<!-- ======================== SECTION 5 ======================== -->
+<h2 id="recipe-parser">五、配方解析引擎（核心）</h2>
+
+<h3>5.1 解析架构</h3>
+<p>解析器位于 <code>dify-proxy-v6.py</code>，采用 <strong>四级级联策略</strong>：</p>
+
+<ol>
+  <li><strong>SOP 表格检测</strong>：检测表头行（含"序号"+"品名"+"用量"），按列提取</li>
+  <li><strong>多行购物清单</strong>：逐行处理，去掉序号/bullet，调用原子解析器</li>
+  <li><strong>单行多食材</strong>：按 +/,/，/； 分隔，每段调用原子解析器</li>
+  <li><strong>全串回退</strong>：正则全局匹配（数量+品名 或 品名+数量）</li>
+</ol>
+
+<h3>5.2 原子解析器支持的模式</h3>
+<table>
+  <tr><th>模式编号</th><th>描述</th><th>示例</th><th>状态</th></tr>
+  <tr><td>1</td><td>品名 + 阿拉伯数字 + g/克</td><td><code>雪酪100g</code></td><td><span class="tag tag-ok">✅</span></td></tr>
+  <tr><td>2</td><td>阿拉伯数字 + g/克 + 品名</td><td><code>40g桂花原浆</code></td><td><span class="tag tag-ok">✅</span></td></tr>
+  <tr><td>3</td><td>品名 + 阿拉伯数字 + 非克单位</td><td><code>芋圆2份</code></td><td><span class="tag tag-ok">✅</span></td></tr>
+  <tr><td>4a</td><td>中文数字 + 克 + 品名</td><td><code>二十克雪酪</code></td><td><span class="tag tag-ok">✅</span></td></tr>
+  <tr><td>4b</td><td>品名 + 中文数字 + 克</td><td><code>雪酪二十克</code></td><td><span class="tag tag-ok">✅</span></td></tr>
+  <tr><td>5a</td><td>中文数字 + 非克单位 + 品名</td><td><code>一份奶酪</code></td><td><span class="tag tag-ok">✅</span></td></tr>
+  <tr><td>5b</td><td>品名 + 中文数字 + 非克单位</td><td><code>奶酪一份</code></td><td><span class="tag tag-ok">✅</span></td></tr>
+  <tr><td>6</td><td>品名 + 分数 + 单位</td><td><code>桂花½克</code></td><td><span class="tag tag-ok">✅</span></td></tr>
+  <tr><td>7</td><td>纯品名（无数量）</td><td><code>百香果果茸</code></td><td><span class="tag tag-ok">✅</span></td></tr>
+</table>
+
+<h3>5.3 名称提取策略</h3>
+<p>从文本片段中提取食材名，采用 <strong>双策略组合</strong>：</p>
+<ol>
+  <li><strong>CORE_INGREDIENTS 匹配</strong>：在 80+ 个已知食材词中找所有匹配，合并相邻/重叠的为一组，取最长连续组</li>
+  <li><strong>Fallback</strong>：无已知词匹配时，提取末尾 2-6 个中文字，过滤口语修饰词</li>
+</ol>
+
+<h3>5.4 预处理清理</h3>
+<ul>
+  <li>全角/半角空格归一化</li>
+  <li>Emoji 清除</li>
+  <li>括号备注去除（含只有开括号/只有闭括号的情况）</li>
+  <li>日期尾缀去除</li>
+  <li>口语前后缀截断（"先放"、"然后铺"、"120g左右"、"200g打底"）</li>
+</ul>
+
+<!-- ======================== SECTION 6 ======================== -->
+<h2 id="matching">六、数据库匹配与别名系统</h2>
+
+<h3>6.1 三层规则匹配</h3>
+<ol>
+  <li><strong>规则 0：精确名称</strong> — 查询名与数据库品名完全匹配</li>
+  <li><strong>规则 1：核心关键词</strong> — 提取核心词（如"牛奶"）在数据库品名中搜索</li>
+  <li><strong>规则 2：品牌关键词</strong> — 在核心词基础上，叠加品牌词（如"塞尚"+"牛奶"）缩小范围</li>
+</ol>
+
+<h3>6.2 最佳选择</h3>
+<p>多个匹配项时，按 <strong>BOM 使用频率</strong> 降序排列，频率最高的作为默认选项。</p>
+
+<h3>6.3 相似品搜索（未找到时）</h3>
+<p>当食材在数据库中不存在时，使用 <strong>字符重叠度 + 连续子串匹配</strong> 算法，在数据库中查找最接近的品名作为参考：</p>
+<ul>
+  <li>提取查询名的中文字符集</li>
+  <li>与数据库每个品名的中文字符集计算交集大小</li>
+  <li>加分项：查询名中连续子串在品名中出现，按子串长度加权</li>
+  <li>返回得分最高的 Top 5 个相似品</li>
+</ul>
+
+<!-- ======================== SECTION 7 ======================== -->
+<h2 id="limitations">七、当前局限与已知问题</h2>
+
+<table>
+  <tr><th>问题</th><th>状态</th><th>说明</th></tr>
+  <tr><td>SeARXNG 中文搜索效果差</td><td><span class="tag tag-warn">降级</span></td><td>改为数据库相似匹配 + 提示用户手动搜索 1688</td></tr>
+  <tr><td>1688.com 有 WAF 防爬</td><td><span class="tag tag-err">未解</span></td><td>无法通过浏览器自动化直接抓取价格</td></tr>
+  <tr><td>部分新食材数据库缺失</td><td><span class="tag tag-warn">已知</span></td><td>寒天晶球、猕猴桃果茸等，需通过相似匹配或手动询价</td></tr>
+  <tr><td>小红书 Agent WeCom 认证</td><td><span class="tag tag-warn">待修复</span></td><td>Bot credentials 被拒绝 (error 853000)，需在企业微信管理后台确认</td></tr>
+  <tr><td>个别别名不够精准</td><td><span class="tag tag-warn">优化中</span></td><td>如"桂花冻"映射到"桂花原浆"不够准确</td></tr>
+</table>
+
+<!-- ======================== SECTION 8 ======================== -->
+<h2 id="ops">八、运维管理命令</h2>
+
+<h3>8.1 使用管理脚本</h3>
+<pre><code># 查看全部状态
+/workspace/manage-agents.sh status
+
+# 重启单个 Agent
+/workspace/manage-agents.sh restart cost
+
+# 查看日志
+/workspace/manage-agents.sh logs main</code></pre>
+
+<h3>8.2 使用 systemctl</h3>
+<pre><code># 查看全部状态
+systemctl status openclaw-main openclaw-cost openclaw-review openclaw-social --no-pager
+
+# 重启全部
+systemctl restart openclaw-main openclaw-cost openclaw-review openclaw-social
+
+# 单独操作
+systemctl restart openclaw-cost
+journalctl -u openclaw-cost -f --no-pager</code></pre>
+
+<h3>8.3 V6 服务管理</h3>
+<pre><code># 启动 V6 本地计算服务
+python3 /vol1/@apphome/trim.openclaw/data/workspace/dify-proxy-v6.py &
+
+# 测试 V6 服务
+curl -s http://127.0.0.1:18900/
+
+# 测试配方计算
+curl -s http://127.0.0.1:18900/ -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"query":"桂花原浆40g+雪酪120g","user":"test","mode":"local"}'</code></pre>
+
+<!-- ======================== SECTION 9 ======================== -->
+<h2 id="usage">九、使用方法</h2>
+
+<h3>9.1 在企微群聊中使用</h3>
+<div class="info">
+  <p><strong>成本核算</strong>：在群聊中 @成本管控 Agent 后发送配方即可</p>
+  <p><strong>管理调度</strong>：在群聊中 @主 Agent 询问各 Agent 状态</p>
+  <p><strong>差评/社交</strong>：对应 @差评收集 Agent / @小红书运营 Agent</p>
+</div>
+
+<h3>9.2 配方输入格式</h3>
+<p>支持多种格式，<strong>任意一种都可以</strong>：</p>
+<div class="card">
+  <h4 style="color:var(--accent);">格式 A：SOP 表格</h4>
+  <pre style="margin:0.5rem 0;">序号  品名  用量  单位
+1     桂花原浆  40   g
+2     雪酪      120  g</pre>
+
+  <h4 style="color:var(--accent);">格式 B：+ 号分隔</h4>
+  <pre style="margin:0.5rem 0;">桂花原浆40g+雪酪120g+散装甜浆200g+冰淇淋80g</pre>
+
+  <h4 style="color:var(--accent);">格式 C：口语化描述</h4>
+  <pre style="margin:0.5rem 0;">先放桂花原浆40g，然后加雪酪120g，再倒散装甜浆200g</pre>
+
+  <h4 style="color:var(--accent);">格式 D：购物清单</h4>
+  <pre style="margin:0.5rem 0;">1. 桂花原浆 40g
+2. 雪酪 120g
+3. 散装甜浆 200g</pre>
+
+  <h4 style="color:var(--accent);">格式 E：逗号分隔</h4>
+  <pre style="margin:0.5rem 0;">猕猴桃果茸40g，芒果果茸30g，奶酪50g，淡奶油80g</pre>
+</div>
+
+<h3>9.3 输出说明</h3>
+<p>Agent 会返回一个 Markdown 表格，包含：</p>
+<ol>
+  <li><strong>成本核算总表</strong>：每项食材的用量、单价、小计、状态</li>
+  <li><strong>数据源详情</strong>：匹配到的数据库品名、别名映射记录</li>
+  <li><strong>包装成本</strong>：固定 0.7525 元/份</li>
+  <li><strong>总成本</strong>：食材 + 包装</li>
+  <li><strong>未找到食材</strong>：数据库中的相似品参考价格</li>
+  <li><strong>品牌确认</strong>：当同一食材有多个选项且差价 &gt; 30% 时</li>
+</ol>
+
+<h3>9.4 状态标记说明</h3>
+<table>
+  <tr><th>标记</th><th>含义</th><th>操作</th></tr>
+  <tr><td>✅</td><td>正常匹配，无价格冲突</td><td>无需操作</td></tr>
+  <tr><td>🔀 请确认</td><td>多个匹配选项，差价较大</td><td>请回复确认使用哪个品牌</td></tr>
+  <tr><td>❌ 未找到</td><td>数据库中无此食材</td><td>需要手动询价</td></tr>
+</table>
+
+<div class="note">
+  <strong>注意：</strong>所有数据直接从原始 CSV 数据库读取，未经大模型处理，计算结果精确到小数点后 4 位。
+</div>
+
+<hr>
+<p style="text-align:center;color:#8b949e;font-size:0.85rem;margin-top:2rem;">
+  文档由 Claude Code 自动生成 ｜ 2026-04-28 ｜ OpenClaw 多 Agent 系统 v1.0
+</p>
+
+</body>
+</html>

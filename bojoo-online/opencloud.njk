@@ -1,0 +1,228 @@
+---
+title: "OpenCloud — Bojoo Online"
+layout: null
+eleventyExcludeFromCollections: true
+---
+{% include "header.njk" %}
+
+<style>
+  .opencloud-page {
+    padding: 40px 0 60px;
+  }
+  .oc-hero {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .oc-hero h1 {
+    font-size: 2rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 8px;
+  }
+  .oc-hero p {
+    color: var(--color-text-light);
+    font-size: 1.05rem;
+  }
+  .status-bar {
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+  }
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .status-dot.green { background: #4caf50; }
+  .status-dot.yellow { background: #ff9800; }
+  .status-dot.gray { background: #999; }
+  .oc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .oc-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 24px;
+  }
+  .oc-card h3 {
+    font-size: 1.1rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .oc-card p {
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+  .oc-card .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .tag-ready { background: #e6f4ea; color: #1b7a3d; }
+  .tag-wip { background: #fff3e0; color: #e65100; }
+  .tag-plan { background: #e3f2fd; color: #1565c0; }
+  .timeline {
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 24px;
+  }
+  .timeline h3 {
+    font-size: 1.1rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 16px;
+  }
+  .timeline-item {
+    display: flex;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-date {
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+    min-width: 80px;
+    font-weight: 600;
+  }
+  .timeline-content {
+    flex: 1;
+    font-size: 0.9rem;
+  }
+</style>
+
+<section class="opencloud-page">
+  <div class="container">
+    <div class="oc-hero">
+      <h1>☁️ OpenCloud</h1>
+      <p>云端协作与基础设施平台</p>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-item">
+        <span class="status-dot green"></span>
+        <span>服务器集群</span>
+      </div>
+      <div class="status-item">
+        <span class="status-dot green"></span>
+        <span>数据库服务</span>
+      </div>
+      <div class="status-item">
+        <span class="status-dot green"></span>
+        <span>Agent 运行</span>
+      </div>
+      <div class="status-item">
+        <span class="status-dot yellow"></span>
+        <span>CI/CD 管道</span>
+      </div>
+      <div class="status-item">
+        <span class="status-dot gray"></span>
+        <span>多租户隔离</span>
+      </div>
+    </div>
+
+    <!-- Feature Cards -->
+    <div class="oc-grid">
+      <div class="oc-card">
+        <h3>🤖 Agent 运行环境 <span class="tag tag-ready">已就绪</span></h3>
+        <p>
+          支持多 Agent 并行运行，当前已部署成本管控、差评收集两个 Agent，
+          小红书运营 Agent 开发中。每个 Agent 独立虚拟环境，互不干扰。
+        </p>
+      </div>
+      <div class="oc-card">
+        <h3>🗄️ 数据服务 <span class="tag tag-ready">已就绪</span></h3>
+        <p>
+          SQLite 数据库集群，三层数据架构（L1原始 → L2筛选 → L3清洗）。
+          支持多平台数据源（大众点评/美团/饿了么/小红书）统一接入。
+        </p>
+      </div>
+      <div class="oc-card">
+        <h3>📡 消息推送 <span class="tag tag-ready">已就绪</span></h3>
+        <p>
+          企微 Webhook 推送系统，支持文字消息、Excel 文件、图片等多种格式。
+          差评预警、周报推送、日报简报均通过企微群实时送达。
+        </p>
+      </div>
+      <div class="oc-card">
+        <h3>🌐 网站托管 <span class="tag tag-wip">推进中</span></h3>
+        <p>
+          bojoo.cn（官网）+ bojoo.online（内部工具站）双域策略。
+          当前 Vercel MVP 部署中，计划迁移至百度智能云。
+        </p>
+      </div>
+      <div class="oc-card">
+        <h3>🔒 安全与权限 <span class="tag tag-wip">推进中</span></h3>
+        <p>
+          Cookie 自动刷新与监控，API Key 分级管理，
+          服务每日自动重启防假死，CDP 浏览器反风控策略。
+        </p>
+      </div>
+      <div class="oc-card">
+        <h3>📊 BI 与报表 <span class="tag tag-plan">规划中</span></h3>
+        <p>
+          财务 BI 看板（演示版已上线）、自动化周报/日报生成、
+          多维度数据交叉分析，AI 经营洞察。
+        </p>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline">
+      <h3>📅 推进时间线</h3>
+      <div class="timeline-item">
+        <span class="timeline-date">2026-05-07</span>
+        <span class="timeline-content">✅ 差评系统全量采集上线（三平台 1556 条）</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-date">2026-05-13</span>
+        <span class="timeline-content">✅ 意图分流 v2 + 企微群聊机器人上线</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-date">2026-05-22</span>
+        <span class="timeline-content">✅ 成本管控 Agent 部署完成</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-date">2026-05-25</span>
+        <span class="timeline-content">✅ 小红书 CDP 搜索采集跑通 + L1~L4 数据库架构</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-date">2026-05-28</span>
+        <span class="timeline-content">✅ Plan 1 企业门户规划完成（bojoo.cn + bojoo.online）</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-date">2026-05-31</span>
+        <span class="timeline-content">🔄 财务 BI 演示版上线 + OpenCloud 推进页面发布</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-date">Next</span>
+        <span class="timeline-content">⏳ 小红书运营文档 + 珠光计划模块 + BI 数据对接</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include "footer.njk" %}

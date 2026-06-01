@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>宝珠奶酪差评服务 · 使用手册</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; line-height: 1.7; color: #333; }
+        h1 { border-bottom: 2px solid #4a90d9; padding-bottom: 10px; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 6px; margin-top: 32px; }
+        table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+        th { background: #f5f7fa; font-weight: 600; }
+        tr:nth-child(even) { background: #fafbfc; }
+        code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+        pre { background: #f5f5f5; padding: 16px; border-radius: 6px; overflow-x: auto; }
+        pre code { background: none; padding: 0; }
+        blockquote { border-left: 4px solid #4a90d9; margin: 16px 0; padding: 8px 16px; background: #f0f7ff; color: #555; }
+        hr { border: none; border-top: 1px solid #eee; margin: 24px 0; }
+        .note { font-size: 0.9em; color: #888; }
+    </style>
+</head>
+<body>
+<h1 id="_1">宝珠奶酪差评服务 · 使用手册</h1>
+<blockquote>
+<p><strong>版本</strong>: 1.0
+<strong>更新日期</strong>: 2026-05-15
+<strong>适用对象</strong>: 店长、运营、管理层 — 无需技术背景</p>
+</blockquote>
+<hr />
+<h2 id="_2">一、这个系统是做什么的</h2>
+<p>宝珠奶酪差评服务是一个<strong>自动化的差评监控与分析系统</strong>，部署在公司服务器上，7×24 小时运行。它做两件事：</p>
+<h3 id="1">1. 自动采集三平台差评</h3>
+<p>系统每天自动从以下平台抓取差评数据，合并到一个数据库里：</p>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>采集方式</th>
+<th>差评定义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>大众点评</td>
+<td>API 直连</td>
+<td>≤3 星</td>
+</tr>
+<tr>
+<td>美团外卖</td>
+<td>API 直连</td>
+<td>≤3 星</td>
+</tr>
+<tr>
+<td>饿了么</td>
+<td>影刀 RPA 自动化</td>
+<td>≤3 星</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2">2. 提供两种使用方式</h3>
+<ul>
+<li><strong>差评周报</strong>：每周日自动推送一份汇总报告到企微群</li>
+<li><strong>差评机器人</strong>：在企微群里直接@机器人提问，即时获取差评数据</li>
+</ul>
+<hr />
+<h2 id="_3">二、差评周报（每周自动推送）</h2>
+<h3 id="_4">推送时间和方式</h3>
+<ul>
+<li><strong>时间</strong>: 每周日自动推送</li>
+<li><strong>地点</strong>: 企微群</li>
+<li><strong>内容</strong>: 上周日到本周日（完整一周）的新增差评汇总</li>
+</ul>
+<h3 id="_5">周报包含什么</h3>
+<p><strong>第一部分：概览</strong>
+- 本周差评总数，与上周对比（环比变化）
+- 累计差评总量
+- 各平台差评分布（大众点评 / 美团 / 饿了么）
+- 问题分类分布（产品质量、服务态度、分量问题等）
+- 差评门店 TOP5
+- 多平台同时出现差评的门店预警</p>
+<p><strong>第二部分：差评明细</strong>
+- 逐条列出本周每一条差评
+- 每条包含：门店名 + 平台 + 星级 + 时间 + 内容摘要（前 30 字）
+- 差评数量多时自动分多条消息发送</p>
+<p><strong>第三部分：Excel 附件</strong>
+- 完整差评明细表（Excel 格式），保存在服务器上，可随时查阅</p>
+<h3 id="_6">示例</h3>
+<pre><code># 宝珠奶酪 · 差评周报
+&gt; 周期：2026-05-10（周日）~ 2026-05-15
+
+- 本周差评：26 条 (-27, 环比 -51%)
+- 累计差评：135 条
+
+## 各平台分布
+- 美团外卖：5条
+- 饿了么：21条
+
+## 问题分类分布
+- 其他：22条
+- 产品质量：3条
+- 分量问题：1条
+
+## 差评门店 TOP5
+1. 西直门凯德MALL店：7条
+2. 望京合生麒麟社店：5条
+...
+</code></pre>
+<h3 id="_7">注意事项</h3>
+<ul>
+<li>周报只统计<strong>新增</strong>差评，不会重复统计历史数据</li>
+<li>如果某周差评数量为 0，也会正常推送（显示"本周 0 条"）</li>
+</ul>
+<hr />
+<h2 id="_8">三、差评机器人（群内即时互动）</h2>
+<h3 id="_9">机器人是什么</h3>
+<p>差评机器人是挂在企微群里的一个 AI 助手。你不需要记命令、不需要写 SQL，用<strong>平时说话的方式</strong>提问就行。</p>
+<h3 id="_10">你能问什么</h3>
+<p>下面是真实的使用场景，<strong>你想怎么说就怎么说</strong>，不需要"标准格式"：</p>
+<h4 id="1_1">场景 1：了解整体情况</h4>
+<table>
+<thead>
+<tr>
+<th>你可以这样问</th>
+<th>机器人会回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>今天有多少差评？</td>
+<td>今日新增数 + 各平台分布</td>
+</tr>
+<tr>
+<td>今天差评多不多？</td>
+<td>今日新增数</td>
+</tr>
+<tr>
+<td>昨天差评的情况怎么样？</td>
+<td>昨日差评数 + 明细</td>
+</tr>
+<tr>
+<td>这周差评情况怎么样？</td>
+<td>本周差评数</td>
+</tr>
+<tr>
+<td>最近 7 天差评怎么样？</td>
+<td>近 7 天差评统计</td>
+</tr>
+<tr>
+<td>最近一个月差评情况</td>
+<td>近 30 天差评统计</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2_1">场景 2：关注某一家门店</h4>
+<table>
+<thead>
+<tr>
+<th>你可以这样问</th>
+<th>机器人会回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>美罗城有差评吗？</td>
+<td>该门店差评数 + 明细</td>
+</tr>
+<tr>
+<td>西直门凯德门店差评多吗？</td>
+<td>该门店差评数 + 明细</td>
+</tr>
+<tr>
+<td>帮我查一下西直门凯德门店的差评</td>
+<td>该门店差评明细</td>
+</tr>
+<tr>
+<td>清河万象汇的差评帮我看看</td>
+<td>该门店差评数 + 明细</td>
+</tr>
+<tr>
+<td>西直门凯德门店的差评都帮我列出来</td>
+<td>该门店全部差评</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>提示</strong>：不需要说完整店名，说关键词就行。"西直门"、"美罗城"、"金桥"都能匹配到对应门店。</p>
+</blockquote>
+<h4 id="3">场景 3：按城市了解情况</h4>
+<table>
+<thead>
+<tr>
+<th>你可以这样问</th>
+<th>机器人会回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>上海的差评有哪些？</td>
+<td>上海所有门店差评</td>
+</tr>
+<tr>
+<td>上海这边差评多不多？</td>
+<td>上海差评总数</td>
+</tr>
+<tr>
+<td>北京最近差评多吗？</td>
+<td>北京差评统计</td>
+</tr>
+<tr>
+<td>深圳有几条差评？</td>
+<td>深圳差评数</td>
+</tr>
+</tbody>
+</table>
+<h4 id="4-vs">场景 4：直营 vs 加盟对比</h4>
+<table>
+<thead>
+<tr>
+<th>你可以这样问</th>
+<th>机器人会回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>上海直营店的差评都帮我列出来</td>
+<td>上海直营店差评明细</td>
+</tr>
+<tr>
+<td>北京加盟店的差评帮我看看</td>
+<td>北京加盟店差评</td>
+</tr>
+<tr>
+<td>直营店总共多少差评？</td>
+<td>直营店差评总数</td>
+</tr>
+<tr>
+<td>加盟店差评多还是直营店多？</td>
+<td>直营/加盟对比</td>
+</tr>
+</tbody>
+</table>
+<h4 id="5">场景 5：按时间查询</h4>
+<table>
+<thead>
+<tr>
+<th>你可以这样问</th>
+<th>机器人会回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3 月份差评有多少？</td>
+<td>3 月差评统计</td>
+</tr>
+<tr>
+<td>4 月 1 日到 4 月 15 日的差评</td>
+<td>该时间段差评</td>
+</tr>
+<tr>
+<td>3 月和 4 月对比一下差评</td>
+<td>两月差评对比</td>
+</tr>
+</tbody>
+</table>
+<h4 id="6">场景 6：按平台查询</h4>
+<table>
+<thead>
+<tr>
+<th>你可以这样问</th>
+<th>机器人会回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>饿了么多少差评？</td>
+<td>饿了么差评统计</td>
+</tr>
+<tr>
+<td>美团外卖的差评帮我看看</td>
+<td>美团差评统计</td>
+</tr>
+<tr>
+<td>大众点评的情况怎么样？</td>
+<td>大众点评差评统计</td>
+</tr>
+<tr>
+<td>哪个平台差评最多？</td>
+<td>各平台差评分布</td>
+</tr>
+</tbody>
+</table>
+<h4 id="7">场景 7：按问题类型查询</h4>
+<table>
+<thead>
+<tr>
+<th>你可以这样问</th>
+<th>机器人会回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>产品质量类的差评有多少？</td>
+<td>该分类差评统计</td>
+</tr>
+<tr>
+<td>服务态度问题严重吗？</td>
+<td>该分类差评统计</td>
+</tr>
+<tr>
+<td>差评主要是哪些类型的问题？</td>
+<td>分类统计</td>
+</tr>
+<tr>
+<td>差评里产品问题占比多少？</td>
+<td>分类占比</td>
+</tr>
+</tbody>
+</table>
+<h4 id="8">场景 8：找问题最多的门店</h4>
+<table>
+<thead>
+<tr>
+<th>你可以这样问</th>
+<th>机器人会回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>差评最多的店是哪一家？</td>
+<td>TOP1 门店 + 差评内容</td>
+</tr>
+<tr>
+<td>差评排名前五的门店</td>
+<td>TOP5 门店</td>
+</tr>
+<tr>
+<td>哪些门店差评最多？</td>
+<td>TOP 门店列表</td>
+</tr>
+</tbody>
+</table>
+<h4 id="9">场景 9：搜索具体差评内容</h4>
+<table>
+<thead>
+<tr>
+<th>你可以这样问</th>
+<th>机器人会回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>提到"难喝"的差评有几条</td>
+<td>内容中包含"难喝"的差评</td>
+</tr>
+<tr>
+<td>有没有提到"过期"的差评</td>
+<td>内容中包含"过期"的差评</td>
+</tr>
+<tr>
+<td>搜索关于"服务态度"的差评</td>
+<td>内容中包含相关词的差评</td>
+</tr>
+</tbody>
+</table>
+<h4 id="10">场景 10：求建议</h4>
+<table>
+<thead>
+<tr>
+<th>你可以这样问</th>
+<th>机器人会回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>差评怎么回复比较好？</td>
+<td>回复话术模板</td>
+</tr>
+<tr>
+<td>差评怎么处理？</td>
+<td>处理建议</td>
+</tr>
+<tr>
+<td>行业标准差评率是多少？</td>
+<td>行业知识</td>
+</tr>
+</tbody>
+</table>
+<h4 id="11">场景 11：混合提问（查数据 + 求建议）</h4>
+<table>
+<thead>
+<tr>
+<th>你可以这样问</th>
+<th>机器人会回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>西直门差评这么多，怎么办？</td>
+<td>先查数据 + 再给建议</td>
+</tr>
+<tr>
+<td>美罗城最近差评多，怎么处理？</td>
+<td>先查数据 + 再给建议</td>
+</tr>
+<tr>
+<td>最近差评变多了，帮我分析一下原因</td>
+<td>数据分析 + 趋势解读</td>
+</tr>
+</tbody>
+</table>
+<h4 id="12">场景 12：随便问</h4>
+<table>
+<thead>
+<tr>
+<th>你可以这样问</th>
+<th>机器人会回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>你好</td>
+<td>打招呼</td>
+</tr>
+<tr>
+<td>你是谁？</td>
+<td>自我介绍</td>
+</tr>
+<tr>
+<td>你能干什么？</td>
+<td>功能介绍</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_11">提问技巧</h3>
+<ul>
+<li><strong>不需要说完整店名</strong>，说关键词就行（"西直门" = "宝珠奶酪（西直门凯德MALL店）"）</li>
+<li><strong>不需要说专业术语</strong>，用你自己的话说</li>
+<li><strong>可以带情绪</strong>，"西直门差评太多了吧"机器人能理解</li>
+<li><strong>可以组合提问</strong>，"上海饿了么的差评帮我看看"</li>
+</ul>
+<h3 id="_12">当前数据范围</h3>
+<p>截至 2026-05-15，数据库中共有 <strong>135 条差评</strong>，覆盖 <strong>74 家门店</strong>，数据时间范围从 2026-04-25 至今。</p>
+<hr />
+<h2 id="_13">四、常见问题</h2>
+<h3 id="q">Q: 为什么没有收到周报推送？</h3>
+<p><strong>可能原因</strong>：
+1. Cookie 过期导致采集失败（系统会发送 Cookie 过期告警）
+2. 企微群被解散或机器人被移出
+3. 服务器临时故障</p>
+<p><strong>处理方法</strong>：
+- 检查企微群是否有 Cookie 过期告警
+- 联系技术负责人检查服务器状态
+- 手动触发推送（技术负责人操作）</p>
+<h3 id="q_1">Q: 机器人不回复了怎么办？</h3>
+<p><strong>可能原因</strong>：
+1. 机器人离线（服务器或 Dify 服务异常）
+2. 数据库文件损坏
+3. 企微机器人接口失效</p>
+<p><strong>处理方法</strong>：
+1. 在群里发一条简单消息测试，如"你好"，看是否有回复
+2. 如果完全无反应，联系技术负责人
+3. 如果回复很慢，可能是服务器负载高，稍等即可</p>
+<h3 id="q_2">Q: 机器人回复的内容不准确怎么办？</h3>
+<p>如果你发现机器人回答的数据有问题（比如差评数不对、门店匹配错了），可以：</p>
+<ol>
+<li><strong>直接指出问题</strong>：在群里说"这个数据不对，XX 店不应该有差评"</li>
+<li><strong>换一种问法再试</strong>：比如"西直门差评"换为"西直门凯德MALL差评"</li>
+<li><strong>联系技术负责人调教机器人</strong></li>
+</ol>
+<h3 id="q_3">Q: 机器人能"调教"吗？</h3>
+<p><strong>可以的</strong>。机器人的行为是可以调整的：</p>
+<table>
+<thead>
+<tr>
+<th>可调内容</th>
+<th>说明</th>
+<th>操作人</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>门店匹配规则</td>
+<td>如果某个店名总是匹配不到或匹配错了，可以调整匹配关键词</td>
+<td>技术负责人</td>
+</tr>
+<tr>
+<td>查询命令</td>
+<td>可以增加新的查询功能，比如"昨日对比"、"特定产品差评"</td>
+<td>技术负责人</td>
+</tr>
+<tr>
+<td>回复话术</td>
+<td>机器人的回复风格可以调整（更正式 / 更简洁）</td>
+<td>技术负责人</td>
+</tr>
+<tr>
+<td>场景手册</td>
+<td>上面列出的提问场景不是固定的，实际使用中发现新的问法会持续补充</td>
+<td>技术负责人</td>
+</tr>
+<tr>
+<td>严重度判定</td>
+<td>高危差评的判定标准可以调整</td>
+<td>技术负责人 + 运营</td>
+</tr>
+<tr>
+<td>问题分类</td>
+<td>可以增加新的问题分类，或调整现有分类规则</td>
+<td>技术负责人 + 运营</td>
+</tr>
+</tbody>
+</table>
+<p><strong>调教方式</strong>：在群里直接反馈问题，技术负责人会在后台调整配置。不需要你自己操作代码。</p>
+<h3 id="q_4">Q: 差评是怎么定义的？</h3>
+<p>三个平台统一标准：<strong>≤3 星（含 3 星）的评价</strong>算作差评。</p>
+<h3 id="q_5">Q: 数据采集的时间</h3>
+<ul>
+<li><strong>每日自动</strong>：每天 00:00 自动运行采集</li>
+<li><strong>周报推送</strong>：每周日推送</li>
+</ul>
+<h3 id="q_6">Q: 数据会丢失吗？</h3>
+<p>数据存储在服务器本地 SQLite 数据库中，每周有定时备份。即使采集脚本出问题，历史数据不会丢失。</p>
+<hr />
+<h2 id="_14">五、谁负责什么</h2>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>店长/运营</td>
+<td>日常使用：看周报、问机器人、反馈问题</td>
+</tr>
+<tr>
+<td>技术负责人</td>
+<td>系统维护、Cookie 更新、机器人调教、故障排查</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_15">六、反馈渠道</h2>
+<p>如果你在使用过程中遇到任何问题，或者对系统有新的需求（比如想看某个维度的数据、想增加某个查询功能），直接联系技术负责人即可。</p>
+</body>
+</html>

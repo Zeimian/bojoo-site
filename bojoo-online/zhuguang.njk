@@ -1,0 +1,201 @@
+---
+title: "珠光计划 — Bojoo Online"
+layout: null
+eleventyExcludeFromCollections: true
+---
+{% include "header.njk" %}
+
+<style>
+  .zhuguang-page {
+    padding: 40px 0 60px;
+  }
+  .zh-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .zh-header h1 {
+    font-size: 2rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 8px;
+  }
+  .zh-header p {
+    color: var(--color-text-light);
+    font-size: 1.05rem;
+  }
+  .zh-badge {
+    display: inline-block;
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 4px 14px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+  .zh-intro {
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 32px;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  .zh-intro h2 {
+    font-size: 1.3rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 12px;
+  }
+  .zh-intro p {
+    color: var(--color-text-light);
+    font-size: 0.95rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+  .zh-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .zh-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+  }
+  .zh-card .zh-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+  }
+  .zh-card h3 {
+    font-size: 1.1rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 8px;
+  }
+  .zh-card p {
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+  .zh-roadmap {
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 24px;
+  }
+  .zh-roadmap h3 {
+    font-size: 1.1rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 16px;
+  }
+  .roadmap-item {
+    display: flex;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-border);
+    align-items: flex-start;
+  }
+  .roadmap-item:last-child { border-bottom: none; }
+  .roadmap-phase {
+    min-width: 60px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    padding-top: 2px;
+  }
+  .roadmap-desc {
+    flex: 1;
+    font-size: 0.9rem;
+  }
+  .roadmap-status {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .rs-plan { background: #e3f2fd; color: #1565c0; }
+  .rs-wip { background: #fff3e0; color: #e65100; }
+</style>
+
+<section class="zhuguang-page">
+  <div class="container">
+    <div class="zh-header">
+      <h1>✨ 珠光计划</h1>
+      <p>品牌达人孵化与运营计划</p>
+      <span class="zh-badge">📋 规划中</span>
+    </div>
+
+    <div class="zh-intro">
+      <h2>计划概述</h2>
+      <p>
+        珠光计划旨在通过系统化的达人孵化与内容运营策略，
+        在小红书、抖音等社交平台建立宝珠奶酪的品牌声量矩阵，
+        将好评达人转化为品牌传播节点，形成自增长的口碑飞轮。
+      </p>
+    </div>
+
+    <div class="zh-grid">
+      <div class="zh-card">
+        <div class="zh-icon">🎯</div>
+        <h3>达人筛选</h3>
+        <p>
+          基于现有好评达人库（1480条，Level≥5），
+          筛选高影响力达人进行深度合作，
+          建立达人等级评估体系。
+        </p>
+      </div>
+      <div class="zh-card">
+        <div class="zh-icon">📝</div>
+        <h3>内容赋能</h3>
+        <p>
+          为达人提供素材包、产品故事、拍摄指南，
+          降低内容创作门槛，提升帖子质量和传播效果。
+        </p>
+      </div>
+      <div class="zh-card">
+        <div class="zh-icon">📊</div>
+        <h3>效果追踪</h3>
+        <p>
+          监控达人帖子的曝光量、互动率、到店转化，
+          建立 ROI 评估模型，持续优化达人合作策略。
+        </p>
+      </div>
+    </div>
+
+    <div class="zh-roadmap">
+      <h3>📅 阶段规划</h3>
+      <div class="roadmap-item">
+        <span class="roadmap-phase">Phase 1</span>
+        <span class="roadmap-desc">
+          好评达人库盘点与分级，建立 L5~L8 达人档案
+        </span>
+        <span class="roadmap-status rs-wip">进行中</span>
+      </div>
+      <div class="roadmap-item">
+        <span class="roadmap-phase">Phase 2</span>
+        <span class="roadmap-desc">
+          小红书使用文档上线，达人协作流程标准化
+        </span>
+        <span class="roadmap-status rs-plan">规划中</span>
+      </div>
+      <div class="roadmap-item">
+        <span class="roadmap-phase">Phase 3</span>
+        <span class="roadmap-desc">
+          达人合作激励机制设计（积分/权益/专属福利）
+        </span>
+        <span class="roadmap-status rs-plan">规划中</span>
+      </div>
+      <div class="roadmap-item">
+        <span class="roadmap-phase">Phase 4</span>
+        <span class="roadmap-desc">
+          数据看板上线，达人效果实时追踪
+        </span>
+        <span class="roadmap-status rs-plan">规划中</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include "footer.njk" %}

@@ -1,0 +1,94 @@
+---
+title: "成本管控使用文档 — Bojoo Online"
+layout: null
+eleventyExcludeFromCollections: true
+---
+{% include "header.njk" %}
+
+<style>
+  .doc-page { padding: 40px 0 60px; }
+  .doc-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .doc-header h1 {
+    font-size: 1.8rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 8px;
+  }
+  .doc-header p {
+    color: var(--color-text-light);
+  }
+  .doc-frame {
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .doc-frame h3 {
+    font-size: 1rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 12px;
+  }
+  .doc-frame p {
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+  .doc-link {
+    display: inline-block;
+    padding: 10px 24px;
+    border-radius: 6px;
+    background: var(--color-primary-dark);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  .doc-link:hover {
+    background: var(--color-primary);
+    color: #fff;
+  }
+  .doc-note {
+    background: #fff3e0;
+    border: 1px solid #ffcc80;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 0.85rem;
+    color: #e65100;
+  }
+</style>
+
+<section class="doc-page">
+  <div class="container">
+    <div class="doc-header">
+      <h1>💰 成本管控 Agent 使用文档</h1>
+      <p>完整的成本管控 Agent 操作指南与功能说明</p>
+    </div>
+
+    <div class="doc-frame">
+      <h3>📄 HTML 版使用手册</h3>
+      <p>
+        系统生成的完整 HTML 文档，包含成本 Agent 的所有功能说明、
+        操作步骤、FAQ 和数据分析方法。适合打印或离线查阅。
+      </p>
+      <br>
+      <a href="/docs/agent-documentation.html" class="doc-link" target="_blank">查看完整文档 →</a>
+    </div>
+
+    <div class="doc-frame">
+      <h3>🎯 核心功能速览</h3>
+      <p>
+        成本管控 Agent 通过分析原材料价格、产品配方 BOM、门店自制半成品等数据，
+        自动计算产品成本，帮助门店进行成本优化和定价决策。
+      </p>
+    </div>
+
+    <div class="doc-note">
+      💡 <strong>提示：</strong>如需更新此文档内容，请在本地编辑 Markdown 源文件后推送。
+    </div>
+  </div>
+</section>
+
+{% include "footer.njk" %}

@@ -1,0 +1,351 @@
+---
+title: "财务 BI 演示 — Bojoo Online"
+layout: null
+eleventyExcludeFromCollections: true
+---
+{% include "header.njk" %}
+
+<style>
+  .bi-demo {
+    padding: 40px 0 60px;
+  }
+  .bi-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .bi-header h1 {
+    font-size: 2rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 8px;
+  }
+  .bi-header p {
+    color: var(--color-text-light);
+  }
+  .demo-badge {
+    display: inline-block;
+    background: #fff3e0;
+    color: #e65100;
+    padding: 4px 14px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .kpi-card {
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+  }
+  .kpi-card .kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    margin-bottom: 4px;
+  }
+  .kpi-card .kpi-label {
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    margin-bottom: 8px;
+  }
+  .kpi-card .kpi-trend {
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .kpi-trend.up { color: #1b7a3d; }
+  .kpi-trend.down { color: #c62828; }
+  .chart-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .chart-box {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 24px;
+  }
+  .chart-box h3 {
+    font-size: 1rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 180px;
+    padding: 0 10px;
+  }
+  .bar-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .bar {
+    width: 100%;
+    max-width: 40px;
+    border-radius: 4px 4px 0 0;
+    background: var(--color-primary-dark);
+    transition: height 0.5s;
+  }
+  .bar-label {
+    font-size: 0.7rem;
+    color: var(--color-text-light);
+    text-align: center;
+  }
+  .store-list {
+    list-style: none;
+  }
+  .store-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.9rem;
+  }
+  .store-list li:last-child { border-bottom: none; }
+  .store-rank {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--color-primary-dark);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 10px;
+  }
+  .store-name { flex: 1; }
+  .store-revenue { font-weight: 600; color: var(--color-primary-dark); }
+  .ai-insight {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e8f5e9 100%);
+    border: 1px solid #bbdefb;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  .ai-insight h3 {
+    color: #1565c0;
+    margin-bottom: 12px;
+    font-size: 1rem;
+  }
+  .ai-insight p {
+    color: #333;
+    font-size: 0.92rem;
+    line-height: 1.8;
+  }
+  .ai-insight .ai-tag {
+    display: inline-block;
+    background: #1565c0;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    margin-right: 6px;
+  }
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .metric-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  .metric-table th {
+    background: var(--color-bg-light);
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+    border-bottom: 2px solid var(--color-border);
+  }
+  .metric-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  @media (max-width: 768px) {
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .chart-section { grid-template-columns: 1fr; }
+    .bottom-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<section class="bi-demo">
+  <div class="container">
+    <div class="bi-header">
+      <h1>📊 门店财务 BI 看板</h1>
+      <p>实时经营数据 · AI 智能分析 · 多维度对比</p>
+      <span class="demo-badge">⚡ 演示数据（非实时）</span>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-value">¥386.5万</div>
+        <div class="kpi-label">本月总营收</div>
+        <div class="kpi-trend up">↑ 12.3% vs 上月</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">¥52.8</div>
+        <div class="kpi-label">客单价（元）</div>
+        <div class="kpi-trend up">↑ 3.1% vs 上月</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">1,847</div>
+        <div class="kpi-label">日均订单数</div>
+        <div class="kpi-trend down">↓ 2.4% vs 上月</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">68.2%</div>
+        <div class="kpi-label">毛利率</div>
+        <div class="kpi-trend up">↑ 1.8pp vs 上月</div>
+      </div>
+    </div>
+
+    <!-- AI Insight -->
+    <div class="ai-insight">
+      <h3><span class="ai-tag">AI</span> 智能经营洞察</h3>
+      <p>
+        本月营收同比增长 12.3%，主要由<strong>新品系列</strong>（酒酿桂花酪/清柚百香果）拉动，贡献新增营收 ¥42万。
+        直营店中<strong>深圳万象城店</strong>表现突出，单店日均 ¥2.8万，环比 +18%。
+        加盟店整体增速放缓，建议关注<strong>北方区域</strong>门店客流下降趋势。
+        成本端原材料价格上涨 3.2%，但通过配方优化抵消了大部分影响。
+      </p>
+    </div>
+
+    <!-- Charts -->
+    <div class="chart-section">
+      <!-- Revenue Trend -->
+      <div class="chart-box">
+        <h3>📈 近7日营收趋势（万元）</h3>
+        <div class="bar-chart">
+          <div class="bar-item">
+            <div class="bar" style="height: 110px;"></div>
+            <div class="bar-label">5/25</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar" style="height: 125px;"></div>
+            <div class="bar-label">5/26</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar" style="height: 95px;"></div>
+            <div class="bar-label">5/27</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar" style="height: 140px;"></div>
+            <div class="bar-label">5/28</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar" style="height: 155px;"></div>
+            <div class="bar-label">5/29</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar" style="height: 170px;"></div>
+            <div class="bar-label">5/30</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar" style="height: 148px; background: var(--color-primary);"></div>
+            <div class="bar-label">5/31</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Stores -->
+      <div class="chart-box">
+        <h3>🏆 门店营收 TOP 5</h3>
+        <ul class="store-list">
+          <li>
+            <span class="store-rank">1</span>
+            <span class="store-name">深圳万象城店</span>
+            <span class="store-revenue">¥84万</span>
+          </li>
+          <li>
+            <span class="store-rank">2</span>
+            <span class="store-name">上海南京路店</span>
+            <span class="store-revenue">¥72万</span>
+          </li>
+          <li>
+            <span class="store-rank">3</span>
+            <span class="store-name">北京三里屯店</span>
+            <span class="store-revenue">¥65万</span>
+          </li>
+          <li>
+            <span class="store-rank">4</span>
+            <span class="store-name">广州太古汇店</span>
+            <span class="store-revenue">¥58万</span>
+          </li>
+          <li>
+            <span class="store-rank">5</span>
+            <span class="store-name">杭州湖滨银泰店</span>
+            <span class="store-revenue">¥51万</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Tables -->
+    <div class="bottom-grid">
+      <!-- Platform Breakdown -->
+      <div class="chart-box">
+        <h3>📱 渠道分布</h3>
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>渠道</th>
+              <th>营收占比</th>
+              <th>订单数</th>
+              <th>客单价</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>堂食</td><td>42%</td><td>28,450</td><td>¥56.3</td></tr>
+            <tr><td>美团外卖</td><td>31%</td><td>35,120</td><td>¥41.8</td></tr>
+            <tr><td>饿了么</td><td>18%</td><td>22,800</td><td>¥39.5</td></tr>
+            <tr><td>小程序自提</td><td>9%</td><td>8,630</td><td>¥62.1</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Product Mix -->
+      <div class="chart-box">
+        <h3>🥛 产品品类表现</h3>
+        <table class="metric-table">
+          <thead>
+            <tr>
+              <th>品类</th>
+              <th>营收（万）</th>
+              <th>占比</th>
+              <th>环比</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>奶酪系列</td><td>156</td><td>40.4%</td><td style="color:#1b7a3d">↑ 15.2%</td></tr>
+            <tr><td>酸奶系列</td><td>98</td><td>25.4%</td><td style="color:#1b7a3d">↑ 8.7%</td></tr>
+            <tr><td>酒酿系列</td><td>78</td><td>20.2%</td><td style="color:#1b7a3d">↑ 22.1%</td></tr>
+            <tr><td>其他饮品</td><td>54.5</td><td>14.1%</td><td style="color:#c62828">↓ 3.2%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% include "footer.njk" %}

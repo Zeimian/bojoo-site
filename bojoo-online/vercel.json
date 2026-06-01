@@ -3,7 +3,7 @@
     { "source": "/(.*)", "has": [{ "type": "host", "value": "cost.bojoo.online" }], "destination": "/cost.html" },
     { "source": "/(.*)", "has": [{ "type": "host", "value": "review.bojoo.online" }], "destination": "/review.html" },
     { "source": "/(.*)", "has": [{ "type": "host", "value": "social.bojoo.online" }], "destination": "/social.html" },
-    { "source": "/(.*)", "has": [{ "type": "host", "value": "bi.bojoo.online" }], "destination": "/bi.html" },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "bi.bojoo.online" }], "destination": "/bi-demo.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
