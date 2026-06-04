@@ -1,9 +1,9 @@
-# 宝珠 Bojoo Online — UI 技术设计规范文档
+# 宝珠 Bojoo — UI 设计规范文档
 
-> **版本**: v1.0.0  
+> **版本**: v2.0.0  
 > **更新日期**: 2026-06-04  
-> **适用范围**: 所有 Bojoo Online 子域名站点及内嵌页面  
-> **设计来源**: Figma Cards-chart-layout-01-dark + 品牌视觉规范
+> **适用范围**: 宝珠所有前端项目（bojoo-online 静态站 + bao-zhu-v3 Next.js 应用）  
+> **设计来源**: Figma Cards-chart-layout + 品牌视觉规范
 
 ---
 
@@ -16,10 +16,10 @@
 - [5. 背景样式规范](#5-背景样式规范)
 - [6. 组件设计规范](#6-组件设计规范)
 - [7. 主页设计规范](#7-主页设计规范)
-- [8. 内嵌页面编写规则](#8-内嵌页面编写规则)
+- [8. 页面编写规则](#8-页面编写规则)
 - [9. 特效实现方案](#9-特效实现方案)
 - [10. 响应式断点](#10-响应式断点)
-- [11. 模块化引用指南](#11-模块化引用指南)
+- [11. 多项目适配指南](#11-多项目适配指南)
 
 ---
 
@@ -27,84 +27,107 @@
 
 ### 1.1 设计理念
 
-Bojoo Online 采用 **深色玻璃拟态（Dark Glassmorphism）** 设计语言，以暖色品牌色 `#D4A574` 为核心视觉锚点，结合微妙的径向渐变背景、毛玻璃效果和流畅的过渡动画，营造专业、温暖且富有科技感的视觉体验。
+宝珠采用 **暖色极简（Warm Minimalist）** 设计语言，以琥珀色品牌色 `#D4A574` 为核心视觉锚点，结合暖白背景 `#FAF7F2`、精致的卡片边框和流畅的过渡动画，营造专业、温暖且易于阅读的视觉体验。
+
+> **设计原则**: 内容优先、克制装饰、一致的品牌色、清晰的层级关系。
 
 ### 1.2 技术栈
 
-| 技术 | 用途 |
-|------|------|
-| 11ty (Eleventy) | 静态站点生成器 |
-| Nunjucks (.njk) | 模板引擎 |
-| 原生 CSS (CSS Variables) | 样式系统 |
-| 原生 JavaScript (ES6) | 交互逻辑 |
-| Vercel Serverless | 后端 API 部署 |
+宝珠前端包含两个独立项目，共享同一套设计规范：
 
-### 1.3 文件结构
+| 项目 | 技术栈 | 用途 |
+|------|--------|------|
+| **bojoo-online** | 11ty + Nunjucks + 原生 CSS | 静态导航站、子域名站点 |
+| **bao-zhu-v3** | Next.js 16 + React + Tailwind CSS + shadcn/ui | AI 研发平台（主应用） |
+
+### 1.3 项目文件结构
+
+#### bao-zhu-v3（Next.js 应用）
+
+```
+bao-zhu-v3/
+├── app/
+│   ├── (landing)/page.tsx        # 首页（Landing Page）
+│   ├── (auth)/login/page.tsx     # 登录页
+│   ├── dashboard/                # 仪表盘
+│   ├── idea-lab/                 # 创意实验室
+│   ├── market-radar/             # 市场雷达
+│   ├── marketing-plan/           # 营销策略官
+│   ├── pricing-sim/              # 定价模拟器
+│   ├── visual-studio/            # AI 视觉实验室
+│   ├── products/                 # 产品库
+│   ├── admin/                    # 后台管理
+│   ├── api/                      # API 路由
+│   ├── globals.css               # 全局样式 + CSS 变量
+│   └── layout.tsx                # 根布局
+├── components/
+│   └── ui/                       # shadcn/ui 组件
+├── lib/
+│   ├── db.ts                     # 数据库连接
+│   ├── theme-config.ts           # 主题配置
+│   └── utils.ts                  # 工具函数
+├── db/
+│   └── schema.ts                 # Drizzle ORM 表结构
+├── tailwind.config.ts            # Tailwind 配置
+├── components.json               # shadcn/ui 配置
+└── .env.local                    # 环境变量
+```
+
+#### bojoo-online（静态站）
 
 ```
 bojoo-online/
 ├── _includes/
-│   ├── header.njk          # 全局头部模板（导航栏）
-│   └── footer.njk          # 全局底部模板
+│   ├── header.njk                # 全局头部
+│   └── footer.njk                # 全局底部
 ├── css/
-│   ├── style.css           # 基础样式（浅色主题基线）
-│   ├── figma-enhanced.css  # 深色主题增强样式（核心设计系统）
-│   ├── enhanced.css        # 浅色主题增强样式（备用）
-│   ├── api-lab.css         # API 实验室页面专用样式
-│   └── rd-page.css         # 新品研发系统页面专用样式
+│   ├── style.css                 # 基础样式（浅色主题基线）
+│   ├── figma-enhanced.css        # 深色主题增强样式
+│   └── enhanced.css              # 浅色主题增强样式
 ├── scripts/
-│   ├── main.js             # 基础交互（移动端导航）
-│   ├── enhanced.js         # 增强交互（滚动动画、卡片入场）
-│   └── api-lab.js          # API 实验室页面交互逻辑
-├── api/                    # Vercel Serverless Functions
-│   ├── index.js            # API 状态端点
-│   ├── chat.js             # 文本生成（OpenAI 协议）
-│   ├── thinking.js         # 深度思考模式
-│   ├── vision.js           # 视觉理解
-│   └── anthropic.js        # Anthropic 协议兼容
-├── index.njk               # 主页
-├── rd.njk                  # 新品研发系统介绍页
-├── api-demo.njk            # API 实验室页面
-├── bi-demo.njk             # 财务 BI 演示页
-├── cost.njk                # 成本管控页
-├── review.njk              # 差评收集页
-├── social.njk              # 小红书运营页
-├── opencloud.njk           # OpenClaw 页
-├── zhuguang.njk            # 珠光计划页
-└── vercel.json             # Vercel 路由配置
+│   ├── main.js                   # 基础交互
+│   └── enhanced.js               # 增强交互
+├── index.njk                     # 主页
+└── vercel.json                   # Vercel 路由配置
 ```
 
 ---
 
 ## 2. 色系定义
 
-### 2.1 主色（Brand Primary）
+### 2.1 品牌主色（Brand Primary）
 
-| 变量名 | 色值 | 用途 |
-|--------|------|------|
-| `--color-primary` | `#D4A574` | 品牌主色，用于按钮、链接、图标、渐变 |
-| `--color-primary-dark` | `#B8864E` | 主色深色，用于标题、hover 状态 |
-| `--color-primary-light` | `#F5E6D3` | 主色浅色，用于背景装饰、渐变终点 |
-| `--color-primary-glow` | `rgba(212, 165, 116, 0.3)` | 主色发光效果 |
+| 变量名 | 色值 | 用途 | Tailwind 用法 |
+|--------|------|------|---------------|
+| `--color-primary` | `#D4A574` | 品牌主色，用于按钮、链接、图标 | `text-[#D4A574]` |
+| `--color-primary-dark` | `#B8864E` | 主色深色，用于标题、hover 状态 | `text-[#B8864E]`、`bg-[#B8864E]` |
+| `--color-primary-light` | `#F5E6D3` | 主色浅色，用于背景装饰、图标背景 | `bg-[#F5E6D3]` |
+| `--color-primary-glow` | `rgba(212, 165, 116, 0.3)` | 主色发光效果 | — |
 
-### 2.2 深色主题背景色
+### 2.2 浅色主题（Light Theme）— bao-zhu-v3 默认
+
+| 变量名 | 色值 | 用途 | Tailwind 用法 |
+|--------|------|------|---------------|
+| `--color-bg` | `#fff` | 页面/卡片背景 | `bg-white` |
+| `--color-bg-light` | `#FAF7F2` | 次级背景、页面底色 | `bg-[#FAF7F2]` |
+| `--color-border` | `#e8e0d4` | 边框色 | `border-[#e8e0d4]` |
+| `--color-text` | `#333` | 正文文字 | `text-[#333]` |
+| `--color-text-light` | `#666` | 次要文字 | `text-[#666]` |
+| `--color-text-muted` | `#999` | 弱化文字 | `text-[#999]` |
+
+### 2.3 深色主题（Dark Theme）— bojoo-online 可选
 
 | 变量名 | 色值 | 用途 |
 |--------|------|------|
 | `--dark-bg-primary` | `#0f1117` | 页面主背景 |
-| `--dark-bg-secondary` | `#1a1d24` | 次级背景、渐变过渡 |
+| `--dark-bg-secondary` | `#1a1d24` | 次级背景 |
 | `--dark-bg-card` | `#1e2128` | 卡片背景 |
 | `--dark-bg-hover` | `#252830` | 卡片 hover 背景 |
 | `--dark-border` | `#2a2d35` | 边框色 |
-| `--dark-border-light` | `#353840` | 亮边框色（hover 状态） |
-
-### 2.3 文字颜色
-
-| 变量名 | 色值 | 用途 |
-|--------|------|------|
+| `--dark-border-light` | `#353840` | 亮边框色 |
 | `--text-primary` | `#ffffff` | 主文字色 |
-| `--text-secondary` | `#b0b3b8` | 次要文字色（描述、标签） |
-| `--text-muted` | `#6b6e73` | 弱化文字色（占位符、提示） |
+| `--text-secondary` | `#b0b3b8` | 次要文字色 |
+| `--text-muted` | `#6b6e73` | 弱化文字色 |
 
 ### 2.4 功能色（Status Colors）
 
@@ -119,15 +142,28 @@ bojoo-online/
 | `--color-info` | `#60a5fa` | 信息状态（AI 洞察、提示） |
 | `--color-info-bg` | `rgba(96, 165, 250, 0.1)` | 信息状态背景 |
 
-### 2.5 中性色
+### 2.5 bao-zhu-v3 CSS 变量映射
 
-| 变量名 | 色值 | 用途 |
-|--------|------|------|
-| `--color-border` | `#e8e0d4` | 浅色主题边框 |
-| `--color-bg` | `#fff` | 浅色主题背景 |
-| `--color-bg-light` | `#FAF7F2` | 浅色主题次级背景 |
-| `--color-text` | `#333` | 浅色主题文字 |
-| `--color-text-light` | `#666` | 浅色主题次要文字 |
+在 `app/globals.css` 中定义，与 Tailwind 配置同步：
+
+```css
+:root {
+  --background: #FFFFFF;
+  --foreground: #111827;
+  --card: #FFFFFF;
+  --card-foreground: #111827;
+  --primary: #16A34A;       /* 可被主题配置覆盖 */
+  --primary-foreground: #FFFFFF;
+  --secondary: #F0FDF4;
+  --muted: #F9FAFB;
+  --muted-foreground: #6B7280;
+  --border: #E5E7EB;
+  --ring: #16A34A;
+  --radius: 0.75rem;
+}
+```
+
+> **注意**: bao-zhu-v3 支持动态主题切换（`lib/theme-config.ts`），用户可在 `/admin/theme` 页面切换不同主题预设。
 
 ---
 
@@ -136,32 +172,42 @@ bojoo-online/
 ### 3.1 字体栈
 
 ```css
+/* 原生 CSS (bojoo-online) */
 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+
+/* Tailwind (bao-zhu-v3) — 在 tailwind.config.ts 中配置 */
+fontFamily: {
+  sans: ["PingFang SC", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+}
 ```
 
 ### 3.2 字号层级
 
-| 层级 | 字号 | 字重 | 用途 |
-|------|------|------|------|
-| H1 | 3.5rem (56px) | 800 | 主页大标题 |
-| H2 | 2.2rem (35px) | 700 | 页面标题 |
-| H3 | 1.3rem (21px) | 700 | 卡片标题 |
-| Body | 0.95rem (15px) | 400 | 正文 |
-| Small | 0.85rem (14px) | 500 | 标签、元数据 |
-| Micro | 0.75rem (12px) | 500 | 徽章、提示 |
+| 层级 | 字号 | 字重 | Tailwind 类 | 用途 |
+|------|------|------|-------------|------|
+| H1 | 3rem (48px) | 700 | `text-4xl md:text-5xl font-bold` | 主页大标题 |
+| H2 | 1.875rem (30px) | 700 | `text-3xl font-bold` | 页面/区块标题 |
+| H3 | 1.125rem (18px) | 700 | `text-lg font-bold` | 卡片标题 |
+| Body | 1rem (16px) | 400 | `text-base` | 正文 |
+| Small | 0.875rem (14px) | 500 | `text-sm font-medium` | 标签、元数据 |
+| Micro | 0.75rem (12px) | 500 | `text-xs` | 徽章、提示 |
 
 ### 3.3 行高
 
-- 正文: `1.6`
-- 描述文字: `1.7`
-- 标题: `1.2`
+| 场景 | 值 | Tailwind 类 |
+|------|-----|-------------|
+| 正文 | `1.6` | `leading-relaxed` |
+| 描述文字 | `1.7` | `leading-relaxed` |
+| 标题 | `1.2` | `leading-tight` |
 
 ### 3.4 字间距
 
-- 标题: `letter-spacing: -1px`
-- 徽章: `letter-spacing: 0.3px`
-- 大写标签: `letter-spacing: 1px`
+| 场景 | 值 | Tailwind 类 |
+|------|-----|-------------|
+| 标题 | `normal` | — |
+| 大写英文标签 | `0.1em` | `tracking-wider` |
+| 品牌副标题 | `0.25em` | `tracking-widest` |
 
 ---
 
@@ -170,45 +216,67 @@ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
 ### 4.1 容器
 
 ```css
+/* 原生 CSS */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
+
+/* Tailwind */
+<div className="max-w-[1200px] mx-auto px-5">
 ```
 
 ### 4.2 间距系统
 
-| 用途 | 间距值 |
-|------|--------|
-| 卡片间距 | `24px` |
-| 模块间距 | `40px` |
-| 区块内边距 | `28px` |
-| 表单元素间距 | `12px` |
-| 导航链接间距 | `28px` |
+| 用途 | 间距值 | Tailwind 类 |
+|------|--------|-------------|
+| 卡片间距 | `24px` | `gap-6` |
+| 模块间距 | `40px` | `gap-10` |
+| 区块内边距 | `28px` | `p-7` |
+| 表单元素间距 | `12px` | `gap-3` |
+| 导航链接间距 | `24px` | `gap-6` |
+| 区块垂直间距 | `64px` | `py-16` |
 
 ### 4.3 圆角系统
 
-| 变量名 | 值 | 用途 |
-|--------|-----|------|
-| `--radius-sm` | `6px` | 小按钮、输入框 |
-| `--radius-md` | `12px` | 卡片、对话框 |
-| `--radius-lg` | `16px` | 大卡片、面板 |
-| `--radius-xl` | `24px` | 特殊容器 |
+| 变量名 | 值 | Tailwind 类 | 用途 |
+|--------|-----|-------------|------|
+| `--radius-sm` | `6px` | `rounded-md` | 小按钮、输入框 |
+| `--radius-md` | `12px` | `rounded-lg` | 卡片、对话框 |
+| `--radius-lg` | `16px` | `rounded-xl` | 大卡片、面板 |
+| `--radius-xl` | `24px` | `rounded-2xl` | 特殊容器 |
 
 ### 4.4 阴影系统
 
-| 变量名 | 值 | 用途 |
-|--------|-----|------|
-| `--shadow-card` | `0 4px 24px rgba(0, 0, 0, 0.3)` | 卡片默认阴影 |
-| `--shadow-card-hover` | `0 8px 40px rgba(0, 0, 0, 0.4)` | 卡片 hover 阴影 |
-| `--shadow-glow` | `0 0 30px rgba(212, 165, 116, 0.15)` | 品牌色发光 |
+| 变量名 | 值 | Tailwind 类 | 用途 |
+|--------|-----|-------------|------|
+| `--shadow-sm` | `0 2px 8px rgba(0,0,0,0.06)` | `shadow-sm` | 轻微阴影 |
+| `--shadow-md` | `0 4px 20px rgba(0,0,0,0.08)` | `shadow-md` | 卡片默认 |
+| `--shadow-lg` | `0 8px 40px rgba(0,0,0,0.12)` | `shadow-lg` | 卡片 hover |
 
 ---
 
 ## 5. 背景样式规范
 
-### 5.1 页面主背景
+### 5.1 浅色主题页面背景（bao-zhu-v3 默认）
+
+```css
+/* 原生 CSS */
+body {
+  background: linear-gradient(180deg, #FAF7F2 0%, #fff 100px);
+}
+
+/* Tailwind */
+<main className="min-h-screen bg-[#FAF7F2]">
+<section className="bg-gradient-to-b from-[#FAF7F2] to-white">
+```
+
+**设计要点**:
+- 顶部暖白渐变，向下过渡到纯白
+- 保持内容区域干净，不干扰阅读
+
+### 5.2 深色主题页面背景（bojoo-online 可选）
 
 ```css
 body {
@@ -219,51 +287,34 @@ body {
 }
 ```
 
-**设计要点**:
-- 使用两个径向渐变叠加，营造微妙的色彩层次
-- 主色（暖色）在左上角，信息色（蓝色）在右下角
-- 透明度极低（2%-3%），不干扰内容阅读
-
-### 5.2 Hero 区域背景
-
-```css
-.online-hero {
-  background: linear-gradient(180deg, var(--dark-bg-primary) 0%, var(--dark-bg-secondary) 100%);
-}
-
-.online-hero::before {
-  background: 
-    radial-gradient(circle at 30% 40%, rgba(212, 165, 116, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 70% 60%, rgba(96, 165, 250, 0.05) 0%, transparent 40%);
-  animation: gradientShift 20s ease-in-out infinite alternate;
-}
-```
-
-**设计要点**:
-- 垂直渐变 + 径向渐变叠加
-- 添加 `gradientShift` 动画，20 秒循环，营造呼吸感
-
 ### 5.3 卡片背景
 
 ```css
-.hub-card {
-  background: var(--dark-bg-card);
-  border: 1px solid var(--dark-border);
+/* 浅色主题 */
+.card {
+  background: #fff;
+  border: 1px solid #e8e0d4;
+}
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-.hub-card:hover {
-  background: var(--dark-bg-hover);
-  border-color: var(--dark-border-light);
-}
+/* Tailwind */
+<div className="bg-white border border-[#e8e0d4] rounded-xl hover:shadow-md transition-shadow">
 ```
 
 ### 5.4 毛玻璃效果
 
 ```css
-.site-header {
+/* 导航栏 */
+nav {
   backdrop-filter: blur(20px);
-  background: rgba(15, 17, 23, 0.9);
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(232, 224, 212, 0.5);
 }
+
+/* Tailwind */
+<nav className="sticky top-0 z-100 bg-white/90 backdrop-blur-md border-b border-[#e8e0d4]">
 ```
 
 **适用场景**: 导航栏、浮动面板、对话框
@@ -274,19 +325,31 @@ body {
 
 ### 6.1 导航栏（Header）
 
-**HTML 结构**:
+**bao-zhu-v3（React + Tailwind）**:
+```tsx
+<nav className="sticky top-0 z-100 bg-white/90 backdrop-blur-md border-b border-[#e8e0d4]">
+  <div className="max-w-[1200px] mx-auto px-5 h-16 flex items-center justify-between">
+    <div className="flex items-center gap-2">
+      <span className="text-xl font-bold text-[#B8864E]">宝珠</span>
+    </div>
+    <div className="flex items-center gap-6">
+      <Link href="/" className="text-sm text-[#333] hover:text-[#B8864E] transition-colors">首页</Link>
+      <Link href="/login" className="bg-[#B8864E] hover:bg-[#D4A574] text-white px-5 py-2 rounded-md text-sm font-medium transition-colors">
+        开始使用
+      </Link>
+    </div>
+  </div>
+</nav>
+```
+
+**bojoo-online（HTML + CSS）**:
 ```html
 <header class="site-header">
   <nav class="container">
     <a href="/" class="logo">宝珠 Bojoo Online</a>
     <ul class="nav-links">
       <li><a href="/">首页</a></li>
-      <li><a href="/rd/">新品研发</a></li>
-      <!-- 更多导航项 -->
     </ul>
-    <button class="nav-toggle" aria-label="Toggle navigation">
-      <span></span><span></span><span></span>
-    </button>
   </nav>
 </header>
 ```
@@ -294,27 +357,38 @@ body {
 **关键样式**:
 - `position: sticky; top: 0` 固定顶部
 - `backdrop-filter: blur(20px)` 毛玻璃效果
-- Logo 使用渐变色文字 + emoji 前缀
-- 导航链接 hover 时底部出现渐变下划线
+- 导航链接 hover 时颜色变为主色深色 `#B8864E`
+- CTA 按钮使用主色深色背景 + 白色文字
 
-### 6.2 卡片（Hub Card）
+### 6.2 卡片（Module Card）
 
-**HTML 结构**:
-```html
-<div class="hub-card">
-  <div class="hub-icon">🧪</div>
-  <h3>新品研发系统</h3>
-  <span class="status-badge status-active">运行中</span>
-  <p>SOP 智能解析 · 市场雷达 · 创意实验室</p>
-  <a href="/rd" class="hub-link" data-subdomain="rd">进入系统</a>
-</div>
+**bao-zhu-v3（React + Tailwind）**:
+```tsx
+<Link href="/market-radar" className="block group">
+  <div className="bg-white border border-[#e8e0d4] rounded-xl p-6 hover:shadow-md transition-shadow h-full">
+    <div className="flex items-start justify-between mb-4">
+      <div className="w-12 h-12 rounded-lg bg-[#F5E6D3] flex items-center justify-center text-2xl">
+        📡
+      </div>
+      <div className="text-right">
+        <div className="text-xl font-bold text-[#B8864E]">500+</div>
+        <div className="text-xs text-[#999]">趋势数据</div>
+      </div>
+    </div>
+    <h3 className="text-lg font-bold text-[#333]">市场雷达</h3>
+    <p className="text-sm text-[#666] leading-relaxed mb-4">实时追踪市场趋势...</p>
+    <div className="flex items-center gap-2 text-[#B8864E] text-sm font-medium group-hover:gap-3 transition-all">
+      <span>进入模块</span><span>→</span>
+    </div>
+  </div>
+</Link>
 ```
 
 **关键样式**:
-- 顶部渐变条 hover 时展开（`transform: scaleX(1)`）
-- hover 时上浮 8px + 缩放 1.02
-- 图标区域圆形背景 + hover 旋转 5 度
-- 按钮带光泽扫过动画（`::before` 伪元素）
+- 纯白背景 + 细边框
+- hover 时阴影增强
+- 图标区域使用主色浅色背景 `#F5E6D3`
+- 箭头 hover 时右移（`group-hover:gap-3`）
 
 ### 6.3 状态徽章（Status Badge）
 
@@ -330,18 +404,33 @@ body {
 
 ### 6.4 按钮（Button）
 
-```html
-<a href="/rd" class="hub-link">进入系统</a>
-<button class="api-btn">🚀 发送</button>
+| 类型 | 背景色 | 文字色 | 用途 |
+|------|--------|--------|------|
+| Primary | `#B8864E` | `#fff` | CTA、主要操作 |
+| Primary Hover | `#D4A574` | `#fff` | Primary hover 状态 |
+| Outline | `transparent` + `border-[#e8e0d4]` | `#333` | 次要操作 |
+| Outline Hover | `#F5E6D3` | `#B8864E` | Outline hover 状态 |
+
+**关键样式**:
+- hover 时背景色变浅
+- `transition-colors` 平滑过渡
+- 圆角 `rounded-md`（6px）
+
+### 6.5 输入框（Input）
+
+```tsx
+<input
+  type="email"
+  className="w-full px-3 py-2 border border-[#e8e0d4] rounded-md focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent"
+/>
 ```
 
 **关键样式**:
-- 渐变背景: `linear-gradient(135deg, #B8864E, #D4A574)`
-- hover 时上浮 2px + 阴影增强
-- 光泽扫过动画（`::before` 从左到右）
-- 箭头图标 hover 时右移 4px
+- 边框色 `#e8e0d4`
+- focus 时显示主色浅色光环 `ring-[#D4A574]`
+- 圆角 `rounded-md`
 
-### 6.5 KPI 卡片
+### 6.6 KPI 卡片
 
 ```html
 <div class="kpi-card">
@@ -352,18 +441,8 @@ body {
 ```
 
 **关键样式**:
-- 顶部 3px 渐变条
-- 数值使用渐变色文字
+- 数值使用主色深色文字
 - 趋势标签带圆角背景
-
-### 6.6 图表容器
-
-```html
-<div class="chart-box">
-  <h3>门店营收排行</h3>
-  <div class="bar-chart">...</div>
-</div>
-```
 
 ### 6.7 AI 洞察框
 
@@ -389,13 +468,18 @@ body {
 │           Header (sticky)           │
 ├─────────────────────────────────────┤
 │                                     │
-│         Online Hero Section         │
-│    (渐变背景 + 浮动装饰元素)         │
+│         Hero Section                │
+│    (暖白渐变背景 + 统计数据)         │
 │                                     │
 ├─────────────────────────────────────┤
 │                                     │
-│         Hub Card Grid               │
-│    (响应式网格，自动换行)            │
+│         Module Card Grid            │
+│    (响应式网格，3 列 → 2 列 → 1 列) │
+│                                     │
+├─────────────────────────────────────┤
+│                                     │
+│         About Section               │
+│    (双栏布局：文字 + 图标)           │
 │                                     │
 ├─────────────────────────────────────┤
 │           Footer                    │
@@ -404,88 +488,112 @@ body {
 
 ### 7.2 Hero 区域规范
 
-- **内边距**: `120px 0 80px`
-- **标题**: 3.5rem, 渐变色文字, 800 字重, `letter-spacing: -1px`
-- **副标题**: 1.2rem, `--text-secondary`, 最大宽度 600px
-- **装饰元素**: 3 个 emoji, 绝对定位, 浮动动画（8 秒循环）
+- **内边距**: `py-20 px-5`（80px 垂直 + 20px 水平）
+- **标题**: `text-4xl md:text-5xl font-bold text-[#B8864E]`
+- **副标题**: `text-xl text-[#666]`，最大宽度 600px
+- **CTA 按钮**: `bg-[#B8864E] hover:bg-[#D4A574] text-white px-8 py-3 rounded-md`
+- **统计数据**: 3 列网格，数值 `text-2xl font-bold text-[#B8864E]`
 
-### 7.3 卡片网格规范
+### 7.3 模块卡片网格规范
 
-- **布局**: `grid-template-columns: repeat(auto-fit, minmax(320px, 1fr))`
-- **间距**: `gap: 24px`
-- **内边距**: `padding: 60px 0`
-- **入场动画**: IntersectionObserver 控制，依次延迟 100ms
+- **布局**: `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`
+- **内边距**: `py-16 px-5`
+- **卡片**: 纯白背景 + 细边框 + hover 阴影
 
-### 7.4 卡片排序规则
+### 7.4 模块排序规则（bao-zhu-v3）
 
-1. 财务 BI（演示版）
-2. 新品研发系统（运行中）
-3. 成本管控（运行中）
-4. 差评收集（运行中）
-5. 小红书运营（文档待做）
-6. OpenClaw（推进中）
-7. 成本管控文档（已上线）
-8. 差评系统文档（已上线）
-9. 珠光计划（规划中）
-10. 宝珠官网（在线）
+1. 市场雷达
+2. 概念验证器（Idea Lab）
+3. 智能研发
+4. 定价模拟器
+5. AI 视觉实验室
+6. 营销策略官
 
 ---
 
-## 8. 内嵌页面编写规则
+## 8. 页面编写规则
 
-### 8.1 模板继承
+### 8.1 bao-zhu-v3（Next.js App Router）
 
-所有页面使用 Nunjucks 模板系统，通过 `{% include %}` 引入公共组件：
+#### 页面文件结构
 
-```njk
----
-title: "页面标题 — Bojoo Online"
-meta_description: "页面描述"
-layout: null
-eleventyExcludeFromCollections: true
----
-{% include "header.njk" %}
+```tsx
+// app/example/page.tsx
+export const metadata: Metadata = {
+  title: "页面标题 | 宝珠",
+  description: "页面描述",
+};
 
-<!-- 页面内容 -->
+export default function ExamplePage() {
+  return (
+    <div className="min-h-screen bg-[#FAF7F2]">
+      {/* 页面头部 */}
+      <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-[#e8e0d4]">
+        <div className="max-w-[1200px] mx-auto px-4 py-3">
+          <a href="/" className="text-[#999] hover:text-[#B8864E] transition-colors text-sm">← 返回</a>
+          <h1 className="text-xl font-semibold text-[#333]">页面标题</h1>
+        </div>
+      </div>
 
-{% include "footer.njk" %}
+      {/* 主内容区 */}
+      <div className="max-w-[1200px] mx-auto px-4 py-6">
+        {/* 内容 */}
+      </div>
+    </div>
+  );
+}
 ```
 
-### 8.2 页面头部（Front Matter）
+#### 编写规则
 
-每个 `.njk` 文件必须包含 YAML front matter：
+1. **必须使用 `"use client"` 标记**（如需交互）
+2. **页面背景**: `bg-[#FAF7F2]`（浅色主题默认）
+3. **导航栏**: sticky + 毛玻璃 + `border-[#e8e0d4]`
+4. **按钮**: 主色 `bg-[#B8864E]`，hover `bg-[#D4A574]`
+5. **链接**: hover 颜色 `hover:text-[#B8864E]`
+6. **卡片**: `bg-white border border-[#e8e0d4] rounded-xl`
+7. **内部导航**: 使用 `next/link` 的 `<Link>` 组件，不使用 `<a>` 标签
 
-```yaml
+### 8.2 bojoo-online（11ty + Nunjucks）
+
+#### 页面文件结构
+
+```njk
 ---
 title: "页面标题 — Bojoo Online"
 meta_description: "SEO 描述，不超过 160 字符"
 layout: null
 eleventyExcludeFromCollections: true
 ---
+{% include "header.njk" %}
+
+<section class="online-hero">
+  <div class="container">
+    <h1>页面标题</h1>
+    <p>页面描述</p>
+  </div>
+</section>
+
+<section class="container">
+  <!-- 页面内容 -->
+</section>
+
+{% include "footer.njk" %}
 ```
 
-### 8.3 CSS 引用顺序
+#### CSS/JS 引用顺序
 
 ```html
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/figma-enhanced.css">
 <link rel="stylesheet" href="/css/页面专用.css">
-```
 
-**引用规则**:
-1. `style.css` — 基础样式（必须）
-2. `figma-enhanced.css` — 深色主题增强（必须）
-3. 页面专用 CSS — 按需引入
-
-### 8.4 JavaScript 引用顺序
-
-```html
 <script src="/scripts/main.js"></script>
 <script src="/scripts/enhanced.js"></script>
 <script src="/scripts/页面专用.js"></script>
 ```
 
-### 8.5 子域名切换脚本
+### 8.3 子域名切换脚本
 
 页面底部必须包含子域名智能切换脚本：
 
@@ -493,12 +601,11 @@ eleventyExcludeFromCollections: true
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     var SUBDOMAIN_MAP = {
-      "rd": "rd.bojoo.online",
       "cost": "cost.bojoo.online",
       "review": "review.bojoo.online"
     };
     var currentHost = window.location.hostname;
-    var isSubdomainDeploy = /^(rd|cost|review)\.bojoo\.online$/.test(currentHost);
+    var isSubdomainDeploy = /^(cost|review)\.bojoo\.online$/.test(currentHost);
     document.querySelectorAll("a[data-subdomain]").forEach(function (a) {
       var sub = a.getAttribute("data-subdomain");
       var target = SUBDOMAIN_MAP[sub];
@@ -509,69 +616,6 @@ eleventyExcludeFromCollections: true
     });
   });
 </script>
-```
-
-### 8.6 页面类型模板
-
-#### 类型 A: 信息展示页（如 rd.njk）
-
-```njk
-<section class="online-hero">
-  <div class="online-hero-ornament">🧪</div>
-  <div class="online-hero-ornament">🔬</div>
-  <div class="online-hero-ornament">✨</div>
-  <div class="container">
-    <h1>页面标题</h1>
-    <p>页面描述</p>
-  </div>
-</section>
-
-<section class="container">
-  <!-- 页面内容 -->
-</section>
-```
-
-#### 类型 B: 功能演示页（如 bi-demo.njk）
-
-```njk
-<section class="bi-demo">
-  <div class="bi-header">
-    <h1>功能名称</h1>
-    <p>功能描述</p>
-    <span class="demo-badge">⚡ 演示版</span>
-  </div>
-  
-  <div class="kpi-row">
-    <!-- KPI 卡片 -->
-  </div>
-  
-  <div class="ai-insight">
-    <!-- AI 分析 -->
-  </div>
-  
-  <div class="chart-section">
-    <!-- 图表区域 -->
-  </div>
-</section>
-```
-
-#### 类型 C: 交互工具页（如 api-demo.njk）
-
-```njk
-<section class="online-hero">
-  <!-- Hero 区域 -->
-</section>
-
-<section class="container">
-  <div class="api-tabs" role="tablist">
-    <!-- Tab 按钮 -->
-  </div>
-  
-  <div class="api-panel active" id="panel-xxx">
-    <!-- 输入表单 -->
-    <!-- 结果展示 -->
-  </div>
-</section>
 ```
 
 ---
@@ -682,41 +726,7 @@ eleventyExcludeFromCollections: true
 }
 ```
 
-### 9.7 AI 洞察框脉冲动画
-
-```css
-.ai-insight::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -20%;
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(96, 165, 250, 0.1) 0%, transparent 70%);
-  animation: aiPulse 5s ease-in-out infinite;
-}
-
-@keyframes aiPulse {
-  0%, 100% { transform: scale(1); opacity: 0.4; }
-  50% { transform: scale(1.3); opacity: 0.7; }
-}
-```
-
-### 9.8 柱状图光泽效果
-
-```css
-.bar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 30%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
-}
-```
-
-### 9.9 卡片入场动画（JavaScript）
+### 9.7 卡片入场动画（JavaScript）
 
 ```javascript
 const observer = new IntersectionObserver(function(entries) {
@@ -747,7 +757,7 @@ cards.forEach(card => observer.observe(card));
 }
 ```
 
-### 9.10 导航链接下划线动画
+### 9.8 导航链接下划线动画
 
 ```css
 .nav-links a::after {
@@ -766,7 +776,7 @@ cards.forEach(card => observer.observe(card));
 }
 ```
 
-### 9.11 汉堡菜单动画
+### 9.9 汉堡菜单动画
 
 ```css
 .nav-toggle.active span:nth-child(1) {
@@ -782,31 +792,33 @@ cards.forEach(card => observer.observe(card));
 }
 ```
 
-### 9.12 加载状态脉冲
-
-```css
-.api-loading {
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-```
-
 ---
 
 ## 10. 响应式断点
 
-| 断点 | 宽度 | 调整内容 |
-|------|------|----------|
-| Desktop | > 1024px | 完整布局 |
-| Tablet | 768px - 1024px | KPI 2 列、图表单列、底部网格单列 |
-| Mobile | < 768px | 导航折叠、Hero 标题缩小、卡片单列 |
-| Small Mobile | < 480px | 研发模块单列 |
+### 10.1 断点定义
 
-### 10.1 移动端导航
+| 断点 | 宽度 | Tailwind 前缀 | 调整内容 |
+|------|------|---------------|----------|
+| Desktop | > 1024px | `lg:` | 完整布局 |
+| Tablet | 768px - 1024px | `md:` | 卡片 2 列、导航完整 |
+| Mobile | < 768px | `sm:` | 导航折叠、卡片单列 |
+| Small Mobile | < 640px | — | 标题缩小、隐藏次要导航 |
+
+### 10.2 响应式网格
+
+```html
+<!-- 主页模块卡片 -->
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+<!-- KPI 行 -->
+<div className="grid grid-cols-3 md:grid-cols-4 gap-4">
+
+<!-- 关于我们双栏 -->
+<div className="grid md:grid-cols-2 gap-10 items-center">
+```
+
+### 10.3 移动端导航
 
 ```css
 @media (max-width: 768px) {
@@ -833,121 +845,107 @@ cards.forEach(card => observer.observe(card));
 }
 ```
 
-### 10.2 响应式网格
+### 10.4 隐藏/显示策略
 
-```css
-/* 主页卡片 */
-.hub-grid {
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-}
-
-/* KPI 行 */
-.kpi-row {
-  grid-template-columns: repeat(4, 1fr);
-}
-@media (max-width: 1024px) {
-  .kpi-row { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* 研发模块 */
-.rd-modules {
-  grid-template-columns: repeat(3, 1fr);
-}
-@media (max-width: 768px) {
-  .rd-modules { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 480px) {
-  .rd-modules { grid-template-columns: 1fr; }
-}
-```
+| 元素 | Desktop | Mobile | Tailwind 类 |
+|------|---------|--------|-------------|
+| 产品库链接 | 显示 | 隐藏 | `hidden sm:inline` |
+| 市场雷达链接 | 显示 | 隐藏 | `hidden sm:inline` |
+| 创意实验室链接 | 显示 | 隐藏 | `hidden sm:inline` |
+| 导入 CSV 按钮 | 显示 | 隐藏 | `hidden md:flex` |
+| AI 搜索文字 | 完整 | 缩写 | `hidden sm:inline` / `sm:hidden` |
 
 ---
 
-## 11. 模块化引用指南
+## 11. 多项目适配指南
 
-### 11.1 快速开始
+### 11.1 设计规范统一性
 
-在新项目中复刻 Bojoo Online UI 风格，按以下步骤操作：
+两个项目共享以下设计参数：
 
-#### 步骤 1: 复制核心文件
+| 参数 | 值 | 说明 |
+|------|-----|------|
+| 品牌主色 | `#D4A574` | 所有项目一致 |
+| 主色深色 | `#B8864E` | 按钮、标题 |
+| 主色浅色 | `#F5E6D3` | 图标背景、装饰 |
+| 边框色 | `#e8e0d4` | 卡片、分割线 |
+| 页面背景 | `#FAF7F2` | 浅色主题默认 |
+| 正文字色 | `#333` | 主要文字 |
+| 次要文字 | `#666` | 描述性文字 |
+| 弱化文字 | `#999` | 元数据、提示 |
+| 字体栈 | PingFang SC + system-ui | 中英文一致 |
 
+### 11.2 快速开始 — 新项目
+
+#### 步骤 1: 选择技术栈
+
+- 如果是 **静态展示页** → 使用 bojoo-online（11ty）
+- 如果是 **交互式应用** → 使用 bao-zhu-v3（Next.js）
+
+#### 步骤 2: 应用设计规范
+
+**bao-zhu-v3（Next.js + Tailwind）**:
+```tsx
+<main className="min-h-screen bg-[#FAF7F2] text-[#333] font-sans">
+  <nav className="sticky top-0 z-100 bg-white/90 backdrop-blur-md border-b border-[#e8e0d4]">
+    {/* 导航内容 */}
+  </nav>
+  <section className="py-16 px-5">
+    <div className="max-w-[1200px] mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* 卡片内容 */}
+      </div>
+    </div>
+  </section>
+</main>
 ```
-从 bojoo-online/ 复制以下文件到项目:
-├── css/
-│   ├── style.css           # 基础样式
-│   └── figma-enhanced.css  # 深色主题（核心）
-├── scripts/
-│   ├── main.js             # 基础交互
-│   └── enhanced.js         # 增强交互
-└── _includes/
-    ├── header.njk          # 导航模板
-    └── footer.njk          # 底部模板
-```
 
-#### 步骤 2: 在 HTML 中引用
-
+**bojoo-online（11ty + CSS）**:
 ```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>项目名称</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/figma-enhanced.css">
-</head>
-<body>
-  <!-- 使用 header.njk 模板或复制其 HTML 结构 -->
-  
-  <main>
-    <!-- 页面内容 -->
-  </main>
-  
-  <!-- 使用 footer.njk 模板或复制其 HTML 结构 -->
-  
-  <script src="scripts/main.js"></script>
-  <script src="scripts/enhanced.js"></script>
-</body>
-</html>
+<main>
+  <header class="site-header">
+    <nav class="container">
+      <a href="/" class="logo">宝珠</a>
+    </nav>
+  </header>
+  <section class="container">
+    <div class="hub-grid">
+      <!-- 卡片内容 -->
+    </div>
+  </section>
+</main>
 ```
 
-#### 步骤 3: 使用组件
+### 11.3 自定义品牌色
 
-参考 [第 6 节 组件设计规范](#6-组件设计规范) 中的 HTML 结构和类名，直接使用：
+如需更换品牌色，只需修改对应项目的配置：
 
-- `.hub-card` — 卡片组件
-- `.status-badge` — 状态徽章
-- `.hub-link` — 按钮链接
-- `.kpi-card` — KPI 指标卡
-- `.ai-insight` — AI 洞察框
-- `.chart-box` — 图表容器
+**bao-zhu-v3** — 修改 `app/globals.css` 和 `tailwind.config.ts`：
+```css
+:root {
+  --primary: #你的主色;
+}
+```
 
-### 11.2 自定义品牌色
-
-如需更换品牌色，只需修改 `figma-enhanced.css` 中的 CSS 变量：
-
+**bojoo-online** — 修改 `css/figma-enhanced.css`：
 ```css
 :root {
   --color-primary: #你的主色;
   --color-primary-dark: #你的主色深色;
   --color-primary-light: #你的主色浅色;
-  --color-primary-glow: rgba(你的主色, 0.3);
 }
 ```
 
-所有使用该变量的组件会自动更新。
+### 11.4 术语表
 
-### 11.3 添加新页面
-
-1. 创建 `.njk` 文件，添加 front matter
-2. `{% include "header.njk" %}` 引入头部
-3. 使用 `.online-hero` 或 `.bi-demo` 等现有布局
-4. `{% include "footer.njk" %}` 引入底部
-5. 在 `vercel.json` 中添加路由规则
-
-### 11.4 部署到子域名
-
-1. 在 `vercel.json` 中添加子域名重写规则
-2. 在 `index.njk` 的 `SUBDOMAIN_MAP` 中添加映射
-3. 更新 `isSubdomainDeploy` 正则表达式
-4. 在 Vercel 控制台绑定子域名
+| 术语 | 定义 |
+|------|------|
+| 宝珠 | 品牌名称，全称"宝珠奶酪" |
+| Bojoo | 品牌英文名 |
+| bao-zhu-v3 | Next.js 主应用项目 |
+| bojoo-online | 11ty 静态导航站项目 |
+| 主色 | `#D4A574`（琥珀色） |
+| 主色深色 | `#B8864E` |
+| 主色浅色 | `#F5E6D3` |
+| 暖白背景 | `#FAF7F2` |
+| 毛玻璃 | `backdrop-filter: blur()` 效果 |
