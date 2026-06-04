@@ -1,0 +1,95 @@
+---
+title: "API 实验室 — Bojoo Online"
+meta_description: "阿里云百炼 API 实验室：文本生成、深度思考、视觉理解"
+layout: null
+eleventyExcludeFromCollections: true
+---
+{% include "header.njk" %}
+
+<section class="online-hero">
+  <div class="online-hero-ornament">🤖</div>
+  <div class="online-hero-ornament">⚡</div>
+  <div class="online-hero-ornament">🧠</div>
+  <div class="container">
+    <h1>API 实验室</h1>
+    <p>阿里云百炼 (DashScope) · 文本生成 · 深度思考 · 视觉理解</p>
+  </div>
+</section>
+
+<section class="container">
+  <!-- 模式选择 Tab -->
+  <div class="api-tabs" role="tablist">
+    <button class="api-tab active" data-tab="chat">📝 文本生成</button>
+    <button class="api-tab" data-tab="thinking">🧠 深度思考</button>
+    <button class="api-tab" data-tab="vision">👁️ 视觉理解</button>
+    <button class="api-tab" data-tab="anthropic">🔌 Anthropic 协议</button>
+  </div>
+
+  <!-- 输入区 -->
+  <div class="api-panel active" id="panel-chat">
+    <div class="api-form">
+      <label class="api-label">模型</label>
+      <select class="api-select" id="chat-model">
+        <option value="qwen3.6-plus" selected>qwen3.6-plus（推荐）</option>
+        <option value="qwen3.6-flash">qwen3.6-flash</option>
+        <option value="qwen3.6-coder">qwen3.6-coder</option>
+      </select>
+      <label class="api-label">提示词</label>
+      <textarea class="api-textarea" id="chat-prompt" rows="4" placeholder="请用一段话介绍千问大模型的优势">请用一段话介绍千问大模型的优势</textarea>
+      <div class="api-row">
+        <label class="api-label-small">温度: <span id="chat-temp-val">0.7</span></label>
+        <input type="range" min="0" max="2" step="0.1" value="0.7" id="chat-temp" class="api-slider">
+      </div>
+      <button class="api-btn" id="chat-btn">🚀 发送</button>
+    </div>
+    <div class="api-result" id="chat-result">
+      <div class="api-placeholder">点击"发送"开始测试</div>
+    </div>
+  </div>
+
+  <div class="api-panel" id="panel-thinking">
+    <div class="api-form">
+      <label class="api-label">提示词（深度思考会自动启用）</label>
+      <textarea class="api-textarea" id="thinking-prompt" rows="4" placeholder="一个经典逻辑题：鸡兔同笼，头共35，脚共94，问鸡兔各几只？">一个经典逻辑题：鸡兔同笼，头共35，脚共94，问鸡兔各几只？</textarea>
+      <button class="api-btn" id="thinking-btn">🧠 启动思考</button>
+    </div>
+    <div class="api-result" id="thinking-result">
+      <div class="api-placeholder">深度思考模式：模型会先输出 reasoning_content（思考过程），再输出最终答案</div>
+    </div>
+  </div>
+
+  <div class="api-panel" id="panel-vision">
+    <div class="api-warning">
+      ⚠️ <strong>限制说明</strong>：当前 <code>coding.dashscope.aliyuncs.com</code> 端点不支持视觉模型。
+      如需视觉能力，请使用标准端点 <code>dashscope.aliyuncs.com</code> 并在阿里云百炼控制台开通 <code>qwen-vl</code> 系列模型。
+    </div>
+    <div class="api-form">
+      <label class="api-label">图片 URL</label>
+      <input type="text" class="api-input" id="vision-url" value="https://dashscope.oss-cn-beijing.aliyuncs.com/images/dog_and_cat.png">
+      <label class="api-label">问题</label>
+      <textarea class="api-textarea" id="vision-prompt" rows="2">请描述这张图片</textarea>
+      <button class="api-btn" id="vision-btn">👁️ 识别</button>
+    </div>
+    <div class="api-result" id="vision-result">
+      <div class="api-placeholder">点击"识别"开始测试</div>
+    </div>
+  </div>
+
+  <div class="api-panel" id="panel-anthropic">
+    <div class="api-form">
+      <label class="api-label">系统提示词 (Anthropic 特有)</label>
+      <textarea class="api-textarea" id="anthro-system" rows="2" placeholder="You are a helpful assistant.">你是一位经验丰富的奶茶店运营顾问。</textarea>
+      <label class="api-label">用户消息</label>
+      <textarea class="api-textarea" id="anthro-prompt" rows="3">如何提高周末门店客流？</textarea>
+      <button class="api-btn" id="anthro-btn">🔌 发送 (Anthropic 协议)</button>
+    </div>
+    <div class="api-result" id="anthro-result">
+      <div class="api-placeholder">Anthropic 协议测试：使用 x-api-key 头和 messages 数组</div>
+    </div>
+  </div>
+</section>
+
+<link rel="stylesheet" href="/css/api-lab.css">
+<script src="/scripts/api-lab.js"></script>
+
+{% include "footer.njk" %}

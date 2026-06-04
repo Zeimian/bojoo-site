@@ -1,126 +1,23 @@
 ---
-title: "Bojoo Online — 内部工具导航"
+title: "宝珠 Bojoo Online — 内部工具导航"
 meta_description: "宝珠奶酪内部工具聚合导航站"
 layout: null
 eleventyExcludeFromCollections: true
 ---
 {% include "header.njk" %}
 
-<style>
-  .online-hero {
-    padding: 60px 0 40px;
-    text-align: center;
-    background: linear-gradient(135deg, #2c2c2c 0%, #444 100%);
-    color: #fff;
-  }
-  .online-hero h1 {
-    font-size: 2.2rem;
-    margin-bottom: 12px;
-  }
-  .online-hero p {
-    color: #ccc;
-    font-size: 1.05rem;
-  }
-  .hub-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 40px 0;
-  }
-  .hub-card {
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 32px 24px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  .hub-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-  }
-  .hub-icon {
-    font-size: 2.5rem;
-    margin-bottom: 16px;
-  }
-  .hub-card h3 {
-    font-size: 1.2rem;
-    margin-bottom: 8px;
-    color: var(--color-primary-dark);
-  }
-  .hub-card p {
-    color: var(--color-text-light);
-    font-size: 0.9rem;
-    margin-bottom: 16px;
-  }
-  .hub-link {
-    display: inline-block;
-    padding: 8px 24px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    background: var(--color-primary-dark);
-    color: #fff;
-    transition: background 0.2s;
-  }
-  .hub-link:hover {
-    background: var(--color-primary);
-    color: #fff;
-  }
-  .status-badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-  .status-active {
-    background: #e6f4ea;
-    color: #1b7a3d;
-  }
-  .status-coming {
-    background: #fff3e0;
-    color: #e65100;
-  }
-</style>
-
 <section class="online-hero">
+  <div class="online-hero-ornament">🧀</div>
+  <div class="online-hero-ornament">☕</div>
+  <div class="online-hero-ornament">✨</div>
   <div class="container">
-    <h1>Bojoo Online</h1>
+    <h1>宝珠 Bojoo Online</h1>
     <p>内部工具聚合导航 — 一站式访问所有 Agent 与业务系统</p>
   </div>
 </section>
 
 <section class="container">
   <div class="hub-grid">
-    <!-- Cost -->
-    <div class="hub-card">
-      <div class="hub-icon">💰</div>
-      <h3>成本管控</h3>
-      <span class="status-badge status-active">运行中</span>
-      <p>成本机器人使用指南和数据分析</p>
-      <a href="https://cost.bojoo.online" class="hub-link" target="_blank">进入系统</a>
-    </div>
-    <!-- Review -->
-    <div class="hub-card">
-      <div class="hub-icon">⭐</div>
-      <h3>差评收集</h3>
-      <span class="status-badge status-active">运行中</span>
-      <p>三平台差评自动采集与分析</p>
-      <a href="https://review.bojoo.online" class="hub-link" target="_blank">进入系统</a>
-    </div>
-    <!-- Social -->
-    <div class="hub-card">
-      <div class="hub-icon">📕</div>
-      <h3>小红书运营</h3>
-      <span class="status-badge status-coming">文档待做</span>
-      <p>小红书关键词监控与博主管理</p>
-      <a href="/docs-social" class="hub-link">查看文档</a>
-    </div>
     <!-- BI Demo -->
     <div class="hub-card">
       <div class="hub-icon">📊</div>
@@ -129,13 +26,45 @@ eleventyExcludeFromCollections: true
       <p>门店经营数据看板与 AI 分析</p>
       <a href="/bi-demo" class="hub-link">查看演示</a>
     </div>
-    <!-- OpenCloud -->
+    <!-- 宝珠新品研发系统 -->
+    <div class="hub-card">
+      <div class="hub-icon">🧪</div>
+      <h3>新品研发系统</h3>
+      <span class="status-badge status-active">运行中</span>
+      <p>SOP 智能解析 · 市场雷达 · 创意实验室 · 视觉工坊 · 定价模拟 · 营销规划</p>
+      <a href="/rd" class="hub-link" data-subdomain="rd">进入系统</a>
+    </div>
+    <!-- Cost -->
+    <div class="hub-card">
+      <div class="hub-icon">💰</div>
+      <h3>成本管控</h3>
+      <span class="status-badge status-active">运行中</span>
+      <p>成本机器人使用指南和数据分析</p>
+      <a href="/cost" class="hub-link" target="_blank" data-subdomain="cost">进入系统</a>
+    </div>
+    <!-- Review -->
+    <div class="hub-card">
+      <div class="hub-icon">⭐</div>
+      <h3>差评收集</h3>
+      <span class="status-badge status-active">运行中</span>
+      <p>三平台差评自动采集与分析</p>
+      <a href="/review" class="hub-link" target="_blank" data-subdomain="review">进入系统</a>
+    </div>
+    <!-- Social / XiaoHongShu -->
+    <div class="hub-card">
+      <div class="hub-icon">📕</div>
+      <h3>小红书运营</h3>
+      <span class="status-badge status-coming">文档待做</span>
+      <p>小红书关键词监控与博主管理</p>
+      <a href="/docs-social" class="hub-link" data-subdomain="xhs">查看文档</a>
+    </div>
+    <!-- OpenClaw -->
     <div class="hub-card">
       <div class="hub-icon">☁️</div>
-      <h3>OpenCloud</h3>
+      <h3>OpenClaw</h3>
       <span class="status-badge status-active">推进中</span>
-      <p>云端协作与基础设施平台</p>
-      <a href="/opencloud" class="hub-link">进入</a>
+      <p>宝珠内部 Agent 平台</p>
+      <a href="/opencloud" class="hub-link" target="_blank" data-subdomain="claw">进入</a>
     </div>
     <!-- Cost Docs -->
     <div class="hub-card">
@@ -143,7 +72,7 @@ eleventyExcludeFromCollections: true
       <h3>成本管控文档</h3>
       <span class="status-badge status-active">已上线</span>
       <p>成本 Agent 完整使用指南</p>
-      <a href="/docs-cost" class="hub-link">查看文档</a>
+      <a href="/docs-cost" class="hub-link" data-subdomain="docs-cost">查看文档</a>
     </div>
     <!-- Review Docs -->
     <div class="hub-card">
@@ -151,7 +80,7 @@ eleventyExcludeFromCollections: true
       <h3>差评系统文档</h3>
       <span class="status-badge status-active">已上线</span>
       <p>差评收集服务使用手册</p>
-      <a href="/docs-review" class="hub-link">查看文档</a>
+      <a href="/docs-review" class="hub-link" data-subdomain="docs-review">查看文档</a>
     </div>
     <!-- 珠光计划 -->
     <div class="hub-card">
@@ -159,9 +88,43 @@ eleventyExcludeFromCollections: true
       <h3>珠光计划</h3>
       <span class="status-badge status-coming">规划中</span>
       <p>品牌达人孵化与运营计划</p>
-      <a href="/zhuguang" class="hub-link">查看详情</a>
+      <a href="/zhuguang" class="hub-link" data-subdomain="zhuguang">查看详情</a>
+    </div>
+    <!-- 官网 -->
+    <div class="hub-card">
+      <div class="hub-icon">🌐</div>
+      <h3>宝珠官网</h3>
+      <span class="status-badge status-active">在线</span>
+      <p>品牌故事、产品介绍、招商加盟</p>
+      <a href="https://bojoo.cn" class="hub-link" target="_blank">访问官网</a>
     </div>
   </div>
 </section>
+
+<script>
+  // 子域名智能切换：在子域名未申请时使用相对路径，部署到子域名后切换为子域链接
+  document.addEventListener("DOMContentLoaded", function () {
+    var SUBDOMAIN_MAP = {
+      "rd": "rd.bojoo.online",
+      "cost": "cost.bojoo.online",
+      "review": "review.bojoo.online",
+      "xhs": "xhs.bojoo.online",
+      "claw": "claw.bojoo.online",
+      "docs-cost": "docs-cost.bojoo.online",
+      "docs-review": "docs-review.bojoo.online",
+      "zhuguang": "zhuguang.bojoo.online"
+    };
+    var currentHost = window.location.hostname;
+    var isSubdomainDeploy = /^(rd|cost|review|xhs|claw|docs-cost|docs-review|zhuguang|bi)\.bojoo\.online$/.test(currentHost);
+    document.querySelectorAll("a[data-subdomain]").forEach(function (a) {
+      var sub = a.getAttribute("data-subdomain");
+      var target = SUBDOMAIN_MAP[sub];
+      if (target && (isSubdomainDeploy || currentHost.indexOf("bojoo.online") === -1)) {
+        a.href = "https://" + target + "/";
+        a.setAttribute("target", "_blank");
+      }
+    });
+  });
+</script>
 
 {% include "footer.njk" %}

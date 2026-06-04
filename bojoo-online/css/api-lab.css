@@ -1,0 +1,192 @@
+/* API Lab - 视觉风格与主站 figma-enhanced.css 保持一致 */
+.api-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 32px 0 24px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0;
+}
+.api-tab {
+  background: transparent;
+  color: var(--text-secondary, #a0a0a0);
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.api-tab:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+}
+.api-tab.active {
+  color: var(--brand-primary, #d4a574);
+  background: rgba(212, 165, 116, 0.08);
+  border-bottom: 2px solid var(--brand-primary, #d4a574);
+}
+
+.api-panel {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  background: rgba(20, 20, 28, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 28px;
+  backdrop-filter: blur(12px);
+}
+.api-panel.active { display: grid; }
+
+@media (max-width: 768px) {
+  .api-panel.active { grid-template-columns: 1fr; }
+}
+
+.api-form { display: flex; flex-direction: column; gap: 12px; }
+.api-label {
+  font-size: 13px;
+  color: var(--text-secondary, #a0a0a0);
+  font-weight: 500;
+  margin-top: 8px;
+}
+.api-label-small {
+  font-size: 12px;
+  color: var(--text-secondary, #a0a0a0);
+}
+.api-select, .api-input, .api-textarea {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  width: 100%;
+  resize: vertical;
+}
+.api-textarea { min-height: 80px; line-height: 1.6; }
+.api-select:focus, .api-input:focus, .api-textarea:focus {
+  outline: none;
+  border-color: var(--brand-primary, #d4a574);
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+}
+.api-row { display: flex; align-items: center; gap: 12px; }
+.api-slider { flex: 1; accent-color: var(--brand-primary, #d4a574); }
+.api-btn {
+  background: linear-gradient(135deg, var(--brand-primary, #d4a574), #b8895a);
+  color: #1a1a1a;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+.api-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(212, 165, 116, 0.3);
+}
+
+.api-result {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 240px;
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-y: auto;
+  max-height: 600px;
+}
+.api-placeholder {
+  color: var(--text-secondary, #707070);
+  text-align: center;
+  padding: 60px 20px;
+  font-style: italic;
+}
+.api-loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--brand-primary, #d4a574);
+  font-size: 15px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.api-output {
+  color: #e8e8e8;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.api-output-title {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--brand-primary, #d4a574);
+  font-weight: 600;
+}
+.api-meta {
+  font-size: 12px;
+  color: var(--text-secondary, #808080);
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+  font-family: 'SF Mono', Menlo, monospace;
+}
+.api-thinking {
+  background: rgba(212, 165, 116, 0.04);
+  border-left: 2px solid var(--brand-primary, #d4a574);
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 16px;
+}
+.api-thinking summary {
+  cursor: pointer;
+  color: var(--brand-primary, #d4a574);
+  font-size: 13px;
+  font-weight: 500;
+  user-select: none;
+}
+.api-thinking pre {
+  margin-top: 8px;
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 12px;
+  color: #c0c0c0;
+  white-space: pre-wrap;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.api-error {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.08);
+  border-left: 2px solid #ff6b6b;
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+}
+.api-warning {
+  grid-column: 1 / -1;
+  background: rgba(255, 193, 7, 0.08);
+  border: 1px solid rgba(255, 193, 7, 0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #ffc107;
+  font-size: 13px;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.api-warning code {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #fff;
+}
