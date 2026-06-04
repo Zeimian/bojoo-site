@@ -64,7 +64,7 @@ eleventyExcludeFromCollections: true
       <h3>OpenClaw</h3>
       <span class="status-badge status-active">推进中</span>
       <p>宝珠内部 Agent 平台</p>
-      <a href="/opencloud" class="hub-link" target="_blank" data-subdomain="claw">进入</a>
+      <a href="/opencloud" class="hub-link" target="_blank" data-subdomain="openclaw">进入</a>
     </div>
     <!-- Cost Docs -->
     <div class="hub-card">
@@ -109,13 +109,13 @@ eleventyExcludeFromCollections: true
       "cost": "cost.bojoo.online",
       "review": "review.bojoo.online",
       "xhs": "xhs.bojoo.online",
-      "claw": "claw.bojoo.online",
+      "openclaw": "openclaw.bojoo.online",
       "docs-cost": "docs-cost.bojoo.online",
       "docs-review": "docs-review.bojoo.online",
       "zhuguang": "zhuguang.bojoo.online"
     };
     var currentHost = window.location.hostname;
-    var isSubdomainDeploy = /^(rd|cost|review|xhs|claw|docs-cost|docs-review|zhuguang|bi)\.bojoo\.online$/.test(currentHost);
+    var isSubdomainDeploy = /^(rd|cost|review|xhs|openclaw|docs-cost|docs-review|zhuguang|bi)\.bojoo\.online$/.test(currentHost);
     document.querySelectorAll("a[data-subdomain]").forEach(function (a) {
       var sub = a.getAttribute("data-subdomain");
       var target = SUBDOMAIN_MAP[sub];
