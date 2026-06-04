@@ -88,7 +88,7 @@ eleventyExcludeFromCollections: true
       <h3>珠光计划</h3>
       <span class="status-badge status-coming">规划中</span>
       <p>品牌达人孵化与运营计划</p>
-      <a href="/zhuguang" class="hub-link" data-subdomain="zhuguang">查看详情</a>
+      <a href="/zhuguang" class="hub-link" target="_blank" data-subdomain="zhuguang">查看详情</a>
     </div>
     <!-- 官网 -->
     <div class="hub-card">
@@ -112,10 +112,10 @@ eleventyExcludeFromCollections: true
       "openclaw": "openclaw.bojoo.online",
       "docs-cost": "docs-cost.bojoo.online",
       "docs-review": "docs-review.bojoo.online",
-      "zhuguang": "zhuguang.bojoo.online"
+      "zhuguang": "influencer-task-management.bojoo.online"
     };
     var currentHost = window.location.hostname;
-    var isSubdomainDeploy = /^(rd|cost|review|xhs|openclaw|docs-cost|docs-review|zhuguang|bi)\.bojoo\.online$/.test(currentHost);
+    var isSubdomainDeploy = /^(rd|cost|review|xhs|openclaw|docs-cost|docs-review|influencer-task-management|zhuguang|bi)\.bojoo\.online$/.test(currentHost);
     document.querySelectorAll("a[data-subdomain]").forEach(function (a) {
       var sub = a.getAttribute("data-subdomain");
       var target = SUBDOMAIN_MAP[sub];

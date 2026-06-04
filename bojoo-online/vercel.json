@@ -27,7 +27,7 @@
     { "source": "/(.*)", "has": [{ "type": "host", "value": "openclaw.bojoo.online" }], "destination": "/opencloud/index.html" },
     { "source": "/(.*)", "has": [{ "type": "host", "value": "docs-cost.bojoo.online" }], "destination": "/docs-cost/index.html" },
     { "source": "/(.*)", "has": [{ "type": "host", "value": "docs-review.bojoo.online" }], "destination": "/docs-review/index.html" },
-    { "source": "/(.*)", "has": [{ "type": "host", "value": "zhuguang.bojoo.online" }], "destination": "/zhuguang/index.html" },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "influencer-task-management.bojoo.online" }], "destination": "/zhuguang/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
